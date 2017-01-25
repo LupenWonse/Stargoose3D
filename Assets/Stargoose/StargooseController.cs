@@ -19,11 +19,7 @@ public class StargooseController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-		float x = Mathf.Clamp (transform.position.x + (horizontalSpeed * horizontalThrust), -30, 30);
-		float z = Mathf.Clamp (transform.position.z + (forwardSpeed * forwardThrust), -30, 30);
-		float y = transform.position.y;
 
-		transform.position = new Vector3 (x, y, z);
 
 
 		//transform.position += Vector3.forward * forwardSpeed * forwardThrust;
@@ -35,6 +31,12 @@ public class StargooseController : MonoBehaviour {
 		horizontalThrust = Input.GetAxis ("Horizontal");
 		forwardThrust = Input.GetAxis ("Vertical");
 			
+
+		float x = Mathf.Clamp (transform.position.x + (horizontalSpeed * horizontalThrust), -25, 25);
+		float z = Mathf.Clamp (transform.position.z + (forwardSpeed * forwardThrust), -25, 25);
+		float y = transform.position.y;
+
+		transform.position = new Vector3 (x, y, z);
 
 	}
 }
