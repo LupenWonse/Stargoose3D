@@ -6,11 +6,18 @@ public class StargooseController : MonoBehaviour {
 
 	[SerializeField] private float forwardSpeed;
 	[SerializeField] private float horizontalSpeed;
+
+	[SerializeField] private Transform machineGunNozzle;
+	[SerializeField] private MachineGunBullet bullet;
+
+
 	private float horizontalThrust = 0;
 	private float forwardThrust = 0;
 
 	private float maxForwardDistanceAllowed = 0;
 	private float minForwardDistanceAllowed = 0;
+
+	private Vector3 firingVelocity = new Vector3(0f,0f,50f);
 
 	// Use this for initialization
 	void Start () {
@@ -38,5 +45,16 @@ public class StargooseController : MonoBehaviour {
 
 		transform.position = new Vector3 (x, y, z);
 
+		if (Input.GetMouseButtonDown(0) ){
+			shootMachineGun ();
+		}
+
+	}
+
+
+	private void shootMachineGun(){
+		print ("Shoot");
+		bullet.transform.position = machineGunNozzle.transform.position;
+		bullet.GetComponent<Rigidbody> ().velocity = firingVelocity;
 	}
 }
