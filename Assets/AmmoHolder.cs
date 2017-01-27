@@ -30,8 +30,7 @@ public class AmmoHolder : MonoBehaviour {
 	void Update () {
 		
 	}
-
-
+		
 	void addAmmoToStack(){
 		MachineGunBullet bullet = GameObject.Instantiate (machineGunBullet,transform);
 		bullets.Push (bullet);
@@ -44,8 +43,15 @@ public class AmmoHolder : MonoBehaviour {
 	}
 
 	public void retrieveBullet(MachineGunBullet bullet){
+		// Disable the bullet
 		bullet.gameObject.SetActive (false);
+
+		// Push it onto our stack
 		bullets.Push (bullet);
+
+		// Set it as our child so it is removed from the scene hierarchy
+		// This is only organizationin in Unity
+		bullet.transform.SetParent(transform);
 	}
 
 }

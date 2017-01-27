@@ -33,7 +33,7 @@ public class Cameraman : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void LateUpdate () {
 		// Calculate the camera orientation
 		// New Camera Target
 		Vector3 newTarget = cameraTarget;
