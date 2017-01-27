@@ -12,15 +12,19 @@ public class StargooseController : MonoBehaviour {
 	[SerializeField] private MachineGunBullet bullet;
 	[SerializeField] private float fireDelay = 0.1f;
 
+	private GameController gameField;
+
 	private float refireTime = 0.1f;
+
+	private float forwardConstantSpeed = 0.1f;
 
 	private float horizontalThrust = 0;
 	private float forwardThrust = 0;
 
 	private bool shootingLeft = true;
 
-	private float maxForwardDistanceAllowed = 0;
-	private float minForwardDistanceAllowed = 0;
+	private float maxForwardDistanceAllowed = 25.0f;
+	private float minForwardDistanceAllowed = 25.0f;
 
 	private Vector3 firingVelocity = new Vector3(0f,0f,50f);
 
@@ -33,6 +37,8 @@ public class StargooseController : MonoBehaviour {
 		if (ammoHolder == null) {
 			Debug.LogError ("No Ammo Holder found on the player ship!");
 		}
+
+		gameField = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
 	}
 	
 	// Update is called once per frame
@@ -44,9 +50,9 @@ public class StargooseController : MonoBehaviour {
 		horizontalThrust = Input.GetAxis ("Horizontal");
 		forwardThrust = Input.GetAxis ("Vertical");
 			
-
-		float x = Mathf.Clamp (transform.position.x + (horizontalSpeed * horizontalThrust), -25, 25);
-		float z = Mathf.Clamp (transform.position.z + (forwardSpeed * forwardThrust), -25, 25);
+		//print (gameField.z);
+		float x = Mathf.Clamp (transform.position.x + (horizontalSpeed * horizontalThrust), gameField.transform.position.x-25, gameField.transform.position.x+25);
+		float z = Mathf.Clamp (transform.position.z + (forwardConstantSpeed + forwardSpeed * forwardThrust), gameField.transform.position.z-minForwardDistanceAllowed, gameField.transform.position.z+ maxForwardDistanceAllowed);
 		float y = transform.position.y;
 
 		transform.position = new Vector3 (x, y, z);

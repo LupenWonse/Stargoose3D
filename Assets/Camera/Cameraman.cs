@@ -6,6 +6,7 @@ public class Cameraman : MonoBehaviour {
 
 
 	private GameObject stargoose;
+	private GameController gameField;
 	[SerializeField] LayerMask floor;
 
 	private Vector3 cameraTarget;
@@ -17,6 +18,7 @@ public class Cameraman : MonoBehaviour {
 	private float cameraSmoothVelocity = 0.0f;
 	private float cameraElevationVelocity = 0.0f;
 	private float cameraSlideVelocity = 0.0f;
+	private float cameraDistance = 20.0f;
 
 	// Use this for initialization
 	void Start () {
@@ -29,6 +31,14 @@ public class Cameraman : MonoBehaviour {
 			cameraTarget = (stargoose.transform.position - transform.position + Vector3.forward*30);
 			cameraElevation = (stargoose.transform.position.z - transform.position.z) / 3;
 			cameraSlide = (stargoose.transform.position.x);
+		}
+
+		gameField = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController>();
+		if (gameField == null) {
+			Debug.LogError ("No Game Controller Object is found");
+		} else {
+			// Initialiaze camera position
+			cameraDistance = (gameField.transform.position.z - 40.0f);
 		}
 	}
 	
@@ -47,7 +57,6 @@ public class Cameraman : MonoBehaviour {
 
 		// Calculate camera elevation
 		float newElevation = (stargoose.transform.position.z - transform.position.z) / 3;
-
 		//Calculate camera slide
 		float newSlide = (stargoose.transform.position.x);
 
@@ -56,8 +65,10 @@ public class Cameraman : MonoBehaviour {
 		cameraElevation = Mathf.SmoothDamp (cameraElevation, newElevation, ref cameraElevationVelocity, smoothTime);
 		cameraSlide =  Mathf.SmoothDamp (cameraSlide, newSlide, ref cameraSlideVelocity, smoothTime);
 
+		cameraDistance = (gameField.transform.position.z - 40.0f);
+
 		transform.rotation = Quaternion.LookRotation (cameraTarget);
-		transform.position = new Vector3 (cameraSlide, cameraElevation, transform.position.z);
+		transform.position = new Vector3 (cameraSlide, cameraElevation, cameraDistance);
 		//stargoose.transform.position = hitObject.point;
 
 	}
