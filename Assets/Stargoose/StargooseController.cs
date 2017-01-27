@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class StargooseController : MonoBehaviour {
 
+	//TEMP TEST
+	public AudioSource gunfireFX;
+
 	[SerializeField] private float forwardSpeed = 0.5f;
 	[SerializeField] private float horizontalSpeed = 0.5f;
 
@@ -78,5 +81,7 @@ public class StargooseController : MonoBehaviour {
 		shootingLeft = !shootingLeft;
 		bullet.transform.SetParent(null);
 		bullet.GetComponent<Rigidbody> ().velocity = firingVelocity;
+
+		gunfireFX.Play ();
 	}
 }
