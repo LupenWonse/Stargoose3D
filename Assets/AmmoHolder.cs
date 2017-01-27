@@ -4,9 +4,19 @@ using UnityEngine;
 
 public class AmmoHolder : MonoBehaviour {
 
+	public static AmmoHolder holder = null;
+
 	private Stack<MachineGunBullet> bullets = new Stack<MachineGunBullet>();
 	public int ammoLeft = 100;
 	public MachineGunBullet machineGunBullet;
+
+	void Awake() {
+		if (holder == null) {
+			holder = this;
+		} else {
+			Destroy (this);
+		}
+	}
 
 	// Use this for initialization
 	void Start () {
@@ -14,8 +24,6 @@ public class AmmoHolder : MonoBehaviour {
 			addAmmoToStack ();
 			print ("Creating Ammo");
 		}
-
-
 	}
 	
 	// Update is called once per frame

@@ -10,7 +10,9 @@ public class StargooseController : MonoBehaviour {
 	[SerializeField] private Transform machineGunLeftNozzle = null;
 	[SerializeField] private Transform machineGunRightNozzle = null;
 	[SerializeField] private MachineGunBullet bullet;
+	[SerializeField] private float fireDelay = 0.1f;
 
+	private float refireTime = 0.1f;
 
 	private float horizontalThrust = 0;
 	private float forwardThrust = 0;
@@ -49,8 +51,9 @@ public class StargooseController : MonoBehaviour {
 
 		transform.position = new Vector3 (x, y, z);
 
-		if (Input.GetMouseButton(0) ){
+		if (Input.GetMouseButton(0) &&  Time.time > refireTime){
 			shootMachineGun ();
+			refireTime = Time.time + fireDelay;
 		}
 
 	}
