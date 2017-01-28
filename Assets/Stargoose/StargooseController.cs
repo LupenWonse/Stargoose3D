@@ -7,6 +7,8 @@ public class StargooseController : MonoBehaviour {
 	//TEMP TEST
 	public AudioSource gunfireFX;
 
+	public int ammo = 100;
+
 	[SerializeField] private float forwardSpeed = 0.5f;
 	[SerializeField] private float horizontalSpeed = 0.5f;
 
@@ -69,19 +71,23 @@ public class StargooseController : MonoBehaviour {
 
 
 	private void shootMachineGun(){
-		// Get the next bullet from the ammo holder
-		bullet = ammoHolder.giveBullet ();
-		// Position and fire the bullet
-		if (shootingLeft) {
-			bullet.transform.position = machineGunLeftNozzle.transform.position;
+		if (ammo > 0) {
+			// Get the next bullet from the ammo holder
+			bullet = ammoHolder.giveBullet ();
+			// Position and fire the bullet
+			if (shootingLeft) {
+				bullet.transform.position = machineGunLeftNozzle.transform.position;
+			} else {
+				bullet.transform.position = machineGunRightNozzle.transform.position;
+			}
+			// Switch shooting nozzle
+			shootingLeft = !shootingLeft;
+			bullet.transform.SetParent (null);
+			bullet.GetComponent<Rigidbody> ().velocity = firingVelocity;
+			ammo -= 1;
+			gunfireFX.Play ();
 		} else {
-			bullet.transform.position = machineGunRightNozzle.transform.position;
+			// Machine Gun Empty
 		}
-		// Switch shooting nozzle
-		shootingLeft = !shootingLeft;
-		bullet.transform.SetParent(null);
-		bullet.GetComponent<Rigidbody> ().velocity = firingVelocity;
-
-		gunfireFX.Play ();
 	}
 }
