@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class MachineGunBullet : MonoBehaviour {
 
+	private int bulletDamage = 10;
 	private float lifetimeLeft = 5;
 
 	// Use this for initialization
@@ -19,6 +20,10 @@ public class MachineGunBullet : MonoBehaviour {
 	void OnTriggerEnter(Collider collider){
 		print ("Bullet Hits");
 		// Perform any effects of hitting something
+
+		// Deal my damage
+		collider.GetComponent<BadGuysController>().takeDamage(bulletDamage);
+
 		//Go back to the stack
 		goToAmmoHolder();
 	}
