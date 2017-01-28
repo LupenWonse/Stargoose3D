@@ -22,7 +22,9 @@ public class MachineGunBullet : MonoBehaviour {
 		// Perform any effects of hitting something
 
 		// Deal my damage
-		collider.GetComponent<BadGuysController>().takeDamage(bulletDamage);
+		if (collider.GetComponent<BadGuysController> ()) {
+			collider.GetComponent<BadGuysController> ().takeDamage (bulletDamage);
+		}
 
 		//Go back to the stack
 		goToAmmoHolder();
