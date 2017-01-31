@@ -37,7 +37,7 @@ public class StargooseController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		ammoHolder = GetComponentInChildren<AmmoHolder> ();
+		ammoHolder = AmmoHolder.holder;
 
 		if (ammoHolder == null) {
 			Debug.LogError ("No Ammo Holder found on the player ship!");
