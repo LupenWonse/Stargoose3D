@@ -73,7 +73,11 @@ public class StargooseController : MonoBehaviour {
 		}
 
 		if (Input.GetKeyDown (KeyCode.Q)) {
-			reloadLeftRocket ();
+			if (leftRocketPosition.childCount == 0) {
+				reloadLeftRocket ();
+			} else {
+				fireLeftRocket ();
+			}
 		}
 
 		if (Input.GetKeyDown (KeyCode.E)) {
@@ -87,6 +91,13 @@ public class StargooseController : MonoBehaviour {
 		if (leftRocketPosition.childCount == 0) {
 			GameObject.Instantiate (rocket, leftRocketPosition, false);
 		}
+	}
+
+	private void fireLeftRocket ()
+	{
+		// This is terrible in terms of performance and code  style
+		leftRocketPosition.GetComponentInChildren<Rigidbody>().velocity = firingVelocity;
+		leftRocketPosition.GetChild(0).GetComponent<Transform>().parent = null;
 	}
 
 	private void reloadRightRocket ()
