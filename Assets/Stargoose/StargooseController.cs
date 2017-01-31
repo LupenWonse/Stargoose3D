@@ -9,6 +9,10 @@ public class StargooseController : MonoBehaviour {
 
 	public int ammo = 100;
 
+	public GameObject rocket;
+	public Transform leftRocketPosition;
+	public Transform rightRocketPosition;
+
 	[SerializeField] private float forwardSpeed = 0.5f;
 	[SerializeField] private float horizontalSpeed = 0.5f;
 
@@ -50,24 +54,48 @@ public class StargooseController : MonoBehaviour {
 	void FixedUpdate () {
 	}
 
-	void Update(){
+	void Update ()
+	{
 
 		horizontalThrust = Input.GetAxis ("Horizontal");
 		forwardThrust = Input.GetAxis ("Vertical");
 			
 		//print (gameField.z);
-		float x = Mathf.Clamp (transform.position.x + (horizontalSpeed * horizontalThrust), gameField.transform.position.x-25, gameField.transform.position.x+25);
-		float z = Mathf.Clamp (transform.position.z + (forwardConstantSpeed + forwardSpeed * forwardThrust), gameField.transform.position.z-minForwardDistanceAllowed, gameField.transform.position.z+ maxForwardDistanceAllowed);
+		float x = Mathf.Clamp (transform.position.x + (horizontalSpeed * horizontalThrust), gameField.transform.position.x - 25, gameField.transform.position.x + 25);
+		float z = Mathf.Clamp (transform.position.z + (forwardConstantSpeed + forwardSpeed * forwardThrust), gameField.transform.position.z - minForwardDistanceAllowed, gameField.transform.position.z + maxForwardDistanceAllowed);
 		float y = transform.position.y;
 
 		transform.position = new Vector3 (x, y, z);
 
-		if (Input.GetMouseButton(0) &&  Time.time > refireTime){
+		if (Input.GetMouseButton (0) && Time.time > refireTime) {
 			shootMachineGun ();
 			refireTime = Time.time + fireDelay;
 		}
 
+		if (Input.GetKeyDown (KeyCode.Q)) {
+			reloadLeftRocket ();
+		}
+
+		if (Input.GetKeyDown (KeyCode.E)) {
+			reloadRightRocket ();
+		}
+
 	}
+
+	private void reloadLeftRocket ()
+	{
+		if (leftRocketPosition.childCount == 0) {
+			GameObject.Instantiate (rocket, leftRocketPosition, false);
+		}
+	}
+
+	private void reloadRightRocket ()
+	{
+		if (rightRocketPosition.childCount == 0) {
+			GameObject.Instantiate (rocket, rightRocketPosition, false);
+		}
+	}
+
 
 
 	private void shootMachineGun(){
