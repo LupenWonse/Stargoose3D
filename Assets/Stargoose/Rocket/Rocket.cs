@@ -21,6 +21,7 @@ public class Rocket : MonoBehaviour {
 
 	public void fire ()
 	{
+		rigidbody.isKinematic = false;
 		rigidbody.velocity = Vector3.forward * speed;
 		GetComponentInChildren<ParticleSystem>().Play();
 		GetComponent<Collider>().enabled = true;
