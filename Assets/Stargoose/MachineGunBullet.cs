@@ -6,13 +6,12 @@ using UnityEngine;
 public class MachineGunBullet : MonoBehaviour {
 
 	private int bulletDamage = 10;
-	private float lifetimeLeft = 5;
 
 	// Use this for initialization
 	void Awake () {
 		gameObject.SetActive (false);
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 	}
