@@ -64,22 +64,34 @@ public class StargooseController : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () {
 
-			
-		//print (gameField.z);
-		float x = Mathf.Clamp (transform.position.x + (horizontalSpeed * horizontalThrust), gameField.transform.position.x - 25, gameField.transform.position.x + 25);
-		float z = Mathf.Clamp (transform.position.z + (forwardConstantSpeed + forwardSpeed * forwardThrust), gameField.transform.position.z - minForwardDistanceAllowed, gameField.transform.position.z + maxForwardDistanceAllowed);
-		float y = transform.position.y;
+
+		horizontalThrust = Input.GetAxis ("Horizontal");
+		forwardThrust = Input.GetAxis ("Vertical");
+
+
+	float x = horizontalSpeed * horizontalThrust * 100;
+	float z = forwardSpeed * forwardThrust * 100;
+
+	GetComponent<Rigidbody>().velocity = new Vector3(x,0.0f,z);
 
 		//transform.position = new Vector3 (x, y, z);
+		//GetComponent<Rigidbody>().MovePosition(new Vector3(x,y,z));
+
+		// Clamping
+		x = Mathf.Clamp (transform.position.x, gameField.transform.position.x - 25, gameField.transform.position.x + 25);
+		z = Mathf.Clamp (transform.position.z, gameField.transform.position.z - minForwardDistanceAllowed, gameField.transform.position.z + maxForwardDistanceAllowed);
+		float y = transform.position.y;
+
 		GetComponent<Rigidbody>().MovePosition(new Vector3(x,y,z));
+
 	}
 
 	void Update ()
 	{
+
+
 	// Input Handling
 
-		horizontalThrust = Input.GetAxis ("Horizontal");
-		forwardThrust = Input.GetAxis ("Vertical");
 
 		if (Input.GetMouseButton (0) && Time.time > refireTime) {
 			shootMachineGun ();
