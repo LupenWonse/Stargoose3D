@@ -4,46 +4,51 @@ using UnityEngine;
 
 public class StargooseController : MonoBehaviour {
 
-	//TEMP TEST
-	public AudioSource gunfireFX;
-
-	public int ammo = 100;
+	// Audio Object
 
 
-	// Rocket variables
+	[Header ("Gameplay")]
+	// Gameplay variables
+	[SerializeField] public int ammo = 100;
+	[SerializeField] private float forwardSpeed = 0.5f;
+	[SerializeField] private float horizontalSpeed = 0.5f;
+	[SerializeField] private float fireDelay = 0.1f;
+	[SerializeField] private float forwardConstantSpeed = 0.1f;
+
+	[SerializeField] private float refireTime = 0.1f;
+
+
+	[Header ("Connections")]
 	// Rocket prefab
-	public Rocket rocket;
+	[SerializeField] private Rocket rocket;
 	// Rocket firing points
-	public Transform leftRocketPosition;
-	public Transform rightRocketPosition;
+	[SerializeField] private Transform leftRocketPosition;
+	[SerializeField] private Transform rightRocketPosition;
 	// Rocket objects
 	private Rocket leftRocket = null, rightRocket = null;
 
-	[SerializeField] private float forwardSpeed = 0.5f;
-	[SerializeField] private float horizontalSpeed = 0.5f;
-
+	// Machine Guns
+	[SerializeField] private MachineGunBullet bullet;
 	[SerializeField] private Transform machineGunLeftNozzle = null;
 	[SerializeField] private Transform machineGunRightNozzle = null;
-	[SerializeField] private MachineGunBullet bullet;
-	[SerializeField] private float fireDelay = 0.1f;
 
-	private GameController gameField;
+	[SerializeField] private GameController gameField;
 
-	private float refireTime = 0.1f;
-
-	private float forwardConstantSpeed = 0.1f;
-
+	// Internal variables - DO NOT SERIALIZE
 	private float horizontalThrust = 0;
 	private float forwardThrust = 0;
 
 	private bool shootingLeft = true;
-
 	private float maxForwardDistanceAllowed = 25.0f;
 	private float minForwardDistanceAllowed = 25.0f;
 
 	private Vector3 firingVelocity = new Vector3(0f,0f,50f);
 
 	private AmmoHolder ammoHolder;
+
+
+	[Header ("Sound FX")]
+	[SerializeField] private AudioSource gunfireFX;
 
 	// Use this for initialization
 	void Start () {
