@@ -12,11 +12,18 @@ public class Rocket : MonoBehaviour {
 
 	void Awake() {
 		rigidbody = GetComponent<Rigidbody>();
+		GetComponent<Collider>().enabled = false;
+	}
+
+	void Start() {
+		GetComponentInChildren<ParticleSystem>().Stop();
 	}
 
 	public void fire ()
 	{
 		rigidbody.velocity = Vector3.forward * speed;
+		GetComponentInChildren<ParticleSystem>().Play();
+		GetComponent<Collider>().enabled = true;
 	}
 
 	void OnTriggerEnter (Collider collider)
