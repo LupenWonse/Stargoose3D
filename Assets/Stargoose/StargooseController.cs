@@ -63,11 +63,6 @@ public class StargooseController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-	}
-
-	void Update ()
-	{
-
 		horizontalThrust = Input.GetAxis ("Horizontal");
 		forwardThrust = Input.GetAxis ("Vertical");
 			
@@ -78,7 +73,11 @@ public class StargooseController : MonoBehaviour {
 
 		//transform.position = new Vector3 (x, y, z);
 		GetComponent<Rigidbody>().MovePosition(new Vector3(x,y,z));
+	}
 
+	void Update ()
+	{
+	// Input Handling
 		if (Input.GetMouseButton (0) && Time.time > refireTime) {
 			shootMachineGun ();
 			refireTime = Time.time + fireDelay;
