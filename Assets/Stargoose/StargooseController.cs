@@ -71,7 +71,8 @@ public class StargooseController : MonoBehaviour {
 		float z = Mathf.Clamp (transform.position.z + (forwardConstantSpeed + forwardSpeed * forwardThrust), gameField.transform.position.z - minForwardDistanceAllowed, gameField.transform.position.z + maxForwardDistanceAllowed);
 		float y = transform.position.y;
 
-		transform.position = new Vector3 (x, y, z);
+		//transform.position = new Vector3 (x, y, z);
+		GetComponent<Rigidbody>().MovePosition(new Vector3(x,y,z));
 
 		if (Input.GetMouseButton (0) && Time.time > refireTime) {
 			shootMachineGun ();
