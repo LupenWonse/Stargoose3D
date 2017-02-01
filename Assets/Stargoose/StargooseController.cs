@@ -9,9 +9,15 @@ public class StargooseController : MonoBehaviour {
 
 	public int ammo = 100;
 
-	public GameObject rocket;
+
+	// Rocket variables
+	// Rocket prefab
+	public Rocket rocket;
+	// Rocket firing points
 	public Transform leftRocketPosition;
 	public Transform rightRocketPosition;
+	// Rocket objects
+	private Rocket leftRocket = null, rightRocket = null;
 
 	[SerializeField] private float forwardSpeed = 0.5f;
 	[SerializeField] private float horizontalSpeed = 0.5f;
@@ -73,7 +79,8 @@ public class StargooseController : MonoBehaviour {
 		}
 
 		if (Input.GetKeyDown (KeyCode.Q)) {
-			if (leftRocketPosition.childCount == 0) {
+		print(leftRocket);
+			if (leftRocket == null) {
 				reloadLeftRocket ();
 			} else {
 				fireLeftRocket ();
@@ -81,31 +88,48 @@ public class StargooseController : MonoBehaviour {
 		}
 
 		if (Input.GetKeyDown (KeyCode.E)) {
-			reloadRightRocket ();
+			if (rightRocket == null) {
+				reloadRightRocket ();
+			} else {
+				fireRightRocket ();
+			}
 		}
 
 	}
 
 	private void reloadLeftRocket ()
 	{
-		if (leftRocketPosition.childCount == 0) {
-			GameObject.Instantiate (rocket, leftRocketPosition, false);
-		}
-	}
-
-	private void fireLeftRocket ()
-	{
-		// This is terrible in terms of performance and code  style
-		leftRocketPosition.GetComponentInChildren<Rigidbody>().velocity = firingVelocity;
-		leftRocketPosition.GetChild(0).GetComponent<Transform>().parent = null;
+			leftRocket = GameObject.Instantiate (rocket, leftRocketPosition, false);
 	}
 
 	private void reloadRightRocket ()
 	{
-		if (rightRocketPosition.childCount == 0) {
-			GameObject.Instantiate (rocket, rightRocketPosition, false);
-		}
+			rightRocket = GameObject.Instantiate (rocket, rightRocketPosition, false);
 	}
+
+	private void fireLeftRocket ()
+	{
+		// This code reads much better
+		// Release the rocket
+		leftRocket.transform.parent = null;
+		// Fire
+		leftRocket.fire();
+		// Rocket is no longer ours
+		leftRocket = null;
+	}
+
+	private void fireRightRocket ()
+	{
+		// Release the rocket
+		rightRocket.transform.parent = null;
+		// Fire
+		rightRocket.fire();
+		// Rocket is no longer ours
+		rightRocket = null;
+
+	}
+
+
 
 
 
