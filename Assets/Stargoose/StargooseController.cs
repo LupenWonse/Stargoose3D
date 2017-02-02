@@ -32,7 +32,10 @@ public class StargooseController : MonoBehaviour {
 	[SerializeField] private Transform machineGunLeftNozzle = null;
 	[SerializeField] private Transform machineGunRightNozzle = null;
 
-	[SerializeField] private GameController gameField;
+
+
+	[Header ("Sound FX")]
+	[SerializeField] private AudioSource gunfireFX;
 
 	// Internal variables - DO NOT SERIALIZE
 	private float horizontalThrust = 0;
@@ -44,11 +47,13 @@ public class StargooseController : MonoBehaviour {
 
 	private Vector3 firingVelocity = new Vector3(0f,0f,50f);
 
+
+	// Internal connections that will be setup during Start
 	private AmmoHolder ammoHolder;
+	private GameController gameField;
+	// Internal holder variables for optimization purposes
+	private new Rigidbody rigidbody;
 
-
-	[Header ("Sound FX")]
-	[SerializeField] private AudioSource gunfireFX;
 
 	// Use this for initialization
 	void Start () {
@@ -59,40 +64,37 @@ public class StargooseController : MonoBehaviour {
 		}
 
 		gameField = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
+
+		// Initialize our rigidbody
+		rigidbody = GetComponent<Rigidbody>();
 	}
-	
-	// Update is called once per frame
+
 	void FixedUpdate () {
+		// Clamp by disallowing thrust in the direction where we hit the limit
+		if (transform.position.z < gameField.transform.position.z - 25) {
+			forwardThrust = Mathf.Max (0.0f, forwardThrust);
+		} else if (transform.position.z > gameField.transform.position.z + 25) {
+			forwardThrust = Mathf.Min (0.0f, forwardThrust);
+		}
 
+		if (transform.position.x < gameField.transform.position.x - 25) {
+			horizontalThrust = Mathf.Max (0.0f, horizontalThrust);
+		} else if (transform.position.x > gameField.transform.position.x + 25) {
+			horizontalThrust = Mathf.Min (0.0f, horizontalThrust);
+		}
 
-		horizontalThrust = Input.GetAxis ("Horizontal");
-		forwardThrust = Input.GetAxis ("Vertical");
-
-
-	float x = horizontalSpeed * horizontalThrust * 100;
-	float z = forwardSpeed * forwardThrust * 100;
-
-	GetComponent<Rigidbody>().velocity = new Vector3(x,0.0f,z);
-
-		//transform.position = new Vector3 (x, y, z);
-		//GetComponent<Rigidbody>().MovePosition(new Vector3(x,y,z));
-
-		// Clamping
-		x = Mathf.Clamp (transform.position.x, gameField.transform.position.x - 25, gameField.transform.position.x + 25);
-		z = Mathf.Clamp (transform.position.z, gameField.transform.position.z - minForwardDistanceAllowed, gameField.transform.position.z + maxForwardDistanceAllowed);
-		float y = transform.position.y;
-
-		GetComponent<Rigidbody>().MovePosition(new Vector3(x,y,z));
-
+		// Set our velocity based on the current thrust rates
+		rigidbody.velocity = new Vector3(horizontalSpeed * horizontalThrust,0.0f,forwardSpeed * forwardThrust + gameField.gameSpeed);
 	}
 
 	void Update ()
 	{
+		// Input Handling
+		// Axes
+		horizontalThrust = Input.GetAxis ("Horizontal");
+		forwardThrust = Input.GetAxis ("Vertical");
 
-
-	// Input Handling
-
-
+		// Key Presses
 		if (Input.GetMouseButton (0) && Time.time > refireTime) {
 			shootMachineGun ();
 			refireTime = Time.time + fireDelay;

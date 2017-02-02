@@ -19,8 +19,7 @@ public class GameController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		transform.position = transform.position + Vector3.forward * gameSpeed;
-
+		transform.position = transform.position + Vector3.forward * gameSpeed * Time.deltaTime;
 		ammoLeftText.text = "Ammo Left: " + stargoose.ammo.ToString ();
 
 
