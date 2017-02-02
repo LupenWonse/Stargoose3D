@@ -124,16 +124,20 @@ public class StargooseController : MonoBehaviour {
 
 	private void reloadLeftRocket ()
 	{
+		if (rockets > 0) {
 			leftRocket = GameObject.Instantiate (rocket, leftRocketPosition, false);
 			// We used one rocket
 			rockets -= 1;
+		}
 	}
 
 	private void reloadRightRocket ()
 	{
+		if (rockets > 0) {
 			rightRocket = GameObject.Instantiate (rocket, rightRocketPosition, false);
 			// We used one rocket
 			rockets -= 1;
+		}
 	}
 
 	private void fireLeftRocket ()
