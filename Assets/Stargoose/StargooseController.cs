@@ -122,6 +122,14 @@ public class StargooseController : MonoBehaviour {
 
 	}
 
+	void LateUpdate ()
+	{
+		// Hack to freeze rotation
+		Vector3 currentRotation = rigidbody.rotation.eulerAngles;
+		currentRotation.y = 0;
+		rigidbody.rotation = Quaternion.Euler(currentRotation);
+	}
+
 	private void reloadLeftRocket ()
 	{
 		if (rockets > 0) {
