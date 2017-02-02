@@ -7,7 +7,7 @@ public class GameController : MonoBehaviour {
 
 	public float gameSpeed = 0.1f;
 
-	public Text ammoLeftText;
+	[SerializeField] private Text ammoText, shieldText, fuelText, rocketsText ;
 
 	//TODO Check here for opt
 	public StargooseController stargoose;
@@ -20,8 +20,15 @@ public class GameController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		transform.position = transform.position + Vector3.forward * gameSpeed * Time.deltaTime;
-		ammoLeftText.text = "Ammo Left: " + stargoose.ammo.ToString ();
 
+		updateUI();
+	}
 
+	void updateUI ()
+	{
+		ammoText.text = "Ammo: " + stargoose.ammo.ToString ();
+		fuelText.text = "Fuel: " + stargoose.fuel.ToString ();
+		shieldText.text = "Shield: " + stargoose.shield.ToString();
+		rocketsText.text = "Rockets: " + stargoose.rockets.ToString();
 	}
 }

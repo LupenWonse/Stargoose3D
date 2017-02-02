@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class StargooseController : MonoBehaviour {
 
-	// Audio Object
+	[Header ("Initialization")]
+	public int rockets = 6;
+	public int fuel = 100, shield = 100, ammo = 100;
 
 
 	[Header ("Gameplay")]
 	// Gameplay variables
-	[SerializeField] public int ammo = 100;
 	[SerializeField] private float forwardSpeed = 0.5f;
 	[SerializeField] private float horizontalSpeed = 0.5f;
 	[SerializeField] private float fireDelay = 0.1f;
@@ -67,6 +68,8 @@ public class StargooseController : MonoBehaviour {
 
 		// Initialize our rigidbody
 		rigidbody = GetComponent<Rigidbody>();
+		this.fuel = 100;
+
 	}
 
 	void FixedUpdate () {
@@ -122,11 +125,15 @@ public class StargooseController : MonoBehaviour {
 	private void reloadLeftRocket ()
 	{
 			leftRocket = GameObject.Instantiate (rocket, leftRocketPosition, false);
+			// We used one rocket
+			rockets -= 1;
 	}
 
 	private void reloadRightRocket ()
 	{
 			rightRocket = GameObject.Instantiate (rocket, rightRocketPosition, false);
+			// We used one rocket
+			rockets -= 1;
 	}
 
 	private void fireLeftRocket ()
