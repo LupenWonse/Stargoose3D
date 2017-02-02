@@ -84,7 +84,7 @@ public class StargooseController : MonoBehaviour {
 		}
 
 		// Set our velocity based on the current thrust rates
-		rigidbody.velocity = new Vector3(horizontalSpeed * horizontalThrust,0.0f,forwardSpeed * forwardThrust + gameField.gameSpeed);
+		rigidbody.velocity = new Vector3(horizontalSpeed * horizontalThrust,rigidbody.velocity.y,forwardSpeed * forwardThrust + gameField.gameSpeed);
 	}
 
 	void Update ()
