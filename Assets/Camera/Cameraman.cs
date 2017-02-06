@@ -7,7 +7,7 @@ public class Cameraman : MonoBehaviour {
 
 	private GameObject stargoose;
 	private GameController gameField;
-	[SerializeField] LayerMask floor;
+	[SerializeField] private LayerMask floor = new LayerMask();
 
 	private Vector3 cameraTarget;
 	private float cameraElevation;

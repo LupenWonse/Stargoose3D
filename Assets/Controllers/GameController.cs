@@ -7,7 +7,7 @@ public class GameController : MonoBehaviour {
 
 	public float gameSpeed = 0.1f;
 
-	[SerializeField] private Text ammoText, shieldText, fuelText, rocketsText ;
+	[SerializeField] private Text ammoText =null, shieldText=null, fuelText=null, rocketsText=null ;
 
 	//TODO Check here for opt
 	public StargooseController stargoose;

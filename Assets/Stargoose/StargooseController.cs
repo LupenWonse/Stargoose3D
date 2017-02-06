@@ -14,17 +14,16 @@ public class StargooseController : MonoBehaviour {
 	[SerializeField] private float forwardSpeed = 0.5f;
 	[SerializeField] private float horizontalSpeed = 0.5f;
 	[SerializeField] private float fireDelay = 0.1f;
-	[SerializeField] private float forwardConstantSpeed = 0.1f;
 
 	[SerializeField] private float refireTime = 0.1f;
 
 
 	[Header ("Connections")]
 	// Rocket prefab
-	[SerializeField] private Rocket rocket;
+	[SerializeField] private Rocket rocket = null;
 	// Rocket firing points
-	[SerializeField] private Transform leftRocketPosition;
-	[SerializeField] private Transform rightRocketPosition;
+	[SerializeField] private Transform leftRocketPosition = null;
+	[SerializeField] private Transform rightRocketPosition = null;
 	// Rocket objects
 	private Rocket leftRocket = null, rightRocket = null;
 
@@ -36,15 +35,14 @@ public class StargooseController : MonoBehaviour {
 
 
 	[Header ("Sound FX")]
-	[SerializeField] private AudioSource gunfireFX;
+	[SerializeField] private AudioSource gunfireFX = null;
 
 	// Internal variables - DO NOT SERIALIZE
 	private float horizontalThrust = 0;
 	private float forwardThrust = 0;
 
 	private bool shootingLeft = true;
-	private float maxForwardDistanceAllowed = 25.0f;
-	private float minForwardDistanceAllowed = 25.0f;
+	private float forwardDistanceAllowed = 25.0f;
 
 	private Vector3 firingVelocity = new Vector3(0f,0f,50f);
 
@@ -74,15 +72,15 @@ public class StargooseController : MonoBehaviour {
 
 	void FixedUpdate () {
 		// Clamp by disallowing thrust in the direction where we hit the limit
-		if (transform.position.z < gameField.transform.position.z - 25) {
+		if (transform.position.z < gameField.transform.position.z - forwardDistanceAllowed) {
 			forwardThrust = Mathf.Max (0.0f, forwardThrust);
-		} else if (transform.position.z > gameField.transform.position.z + 25) {
+		} else if (transform.position.z > gameField.transform.position.z + forwardDistanceAllowed) {
 			forwardThrust = Mathf.Min (0.0f, forwardThrust);
 		}
 
-		if (transform.position.x < gameField.transform.position.x - 25) {
+		if (transform.position.x < gameField.transform.position.x - forwardDistanceAllowed) {
 			horizontalThrust = Mathf.Max (0.0f, horizontalThrust);
-		} else if (transform.position.x > gameField.transform.position.x + 25) {
+		} else if (transform.position.x > gameField.transform.position.x + forwardDistanceAllowed) {
 			horizontalThrust = Mathf.Min (0.0f, horizontalThrust);
 		}
 
@@ -129,6 +127,14 @@ public class StargooseController : MonoBehaviour {
 		currentRotation.y = 0;
 		rigidbody.rotation = Quaternion.Euler(currentRotation);
 	}
+
+	// Damage functions
+	public void takeDamage(int damage){
+		shield -= damage;
+	}
+
+
+
 
 	private void reloadLeftRocket ()
 	{
