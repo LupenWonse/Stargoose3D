@@ -183,17 +183,20 @@ public class StargooseController : MonoBehaviour {
 	private void shootMachineGun(){
 		if (ammo > 0) {
 			// Get the next bullet from the ammo holder
-			bullet = ammoHolder.giveBullet ();
+			MachineGunBullet newBullet = ammoHolder.giveBullet ();
+			newBullet.gameObject.layer = bullet.gameObject.layer;
+			newBullet.GetComponent<Renderer> ().sharedMaterial = bullet.GetComponent<Renderer> ().sharedMaterial;
+
 			// Position and fire the bullet
 			if (shootingLeft) {
-				bullet.transform.position = machineGunLeftNozzle.transform.position;
+				newBullet.transform.position = machineGunLeftNozzle.transform.position;
 			} else {
-				bullet.transform.position = machineGunRightNozzle.transform.position;
+				newBullet.transform.position = machineGunRightNozzle.transform.position;
 			}
 			// Switch shooting nozzle
 			shootingLeft = !shootingLeft;
-			bullet.transform.SetParent (null);
-			bullet.GetComponent<Rigidbody> ().velocity = firingVelocity;
+			newBullet.transform.SetParent (null);
+			newBullet.GetComponent<Rigidbody> ().velocity = firingVelocity;
 			ammo -= 1;
 			gunfireFX.Play ();
 		} else {
