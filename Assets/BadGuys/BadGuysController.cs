@@ -49,6 +49,8 @@ public class BadGuysController : MonoBehaviour {
 	void turretBehave(){
 		if (isEnemyInRange) {
 
+			aim();
+
 			if (Time.time > firingTime) {
 				MachineGunBullet bullet = AmmoHolder.holder.giveBullet ();
 
@@ -61,6 +63,50 @@ public class BadGuysController : MonoBehaviour {
 				firingTime = Time.time + fireDelay;
 			}
 		}
+	}
+
+	void aim ()
+	{
+		Transform playerLocation = GameObject.FindObjectOfType<StargooseController> ().transform;
+		Vector3 fromToVector = playerLocation.position - transform.position;
+		fromToVector.y = 0;
+
+		//print(fromToVector);
+		//print(playerLocation.position);
+		//print(Vector3.Angle(fromToVector,Vector3.forward));
+
+
+		float aimAngle = Vector3.Angle (fromToVector, Vector3.forward);
+		aimAngle *= Mathf.Sign (Vector3.Cross (fromToVector, Vector3.forward).y);
+		if (aimAngle < 0) {
+			aimAngle += 360;
+		}
+
+		print (aimAngle);
+		if (aimAngle <= 45 / 2) {
+			aimAngle = 0;
+		} else if (aimAngle <= 45 + 45 / 2) {
+			aimAngle = 45;
+		} else if (aimAngle <= 90 + 45 / 2) {
+			aimAngle = 90;
+		} else if (aimAngle >= 360 - 45 / 2) {
+			aimAngle = 0;
+		} else if (aimAngle >= 315 - 45 / 2) {
+			aimAngle = 315;
+		} else if (aimAngle >= 270 - 45 / 2) {
+			aimAngle = 270;
+		} else {
+			aimAngle = 0;
+		}
+
+
+
+
+
+		turretNozzle.rotation = Quaternion.Euler(0,-aimAngle,0);
+		//turretNozzle.rotation = Quaternion.Euler(0,Vector3.Angle(fromToVector,Vector3.forward),0);
+		//turretNozzle.r(0,Vector3.Angle(fromToVector,Vector3.forward),0,Space.World);
+
 	}
 
 
