@@ -2,22 +2,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Enemy types
+public enum enemyTypes {Mine,Turret,RocketLauncher}
+
 public class BadGuysController : MonoBehaviour {
 
-	public enum enemyTypes {Mine,Turret,RocketLauncher}
-
+	// Inspector variables
 	public enemyTypes type;
 	public float totalHealth = 100;
 	public int hitDamage = 25;
 
-	public MachineGunBullet machineGunBullet;
+	// Bullet that we will use
+	[SerializeField] private MachineGunBullet machineGunBullet;
+	[SerializeField] private float fireDelay = 1.0f;
+	[SerializeField] private float firingVelocity = 10.0f;
 
-	private bool isEnemyInRange = true;
-	private float fireDelay = 1.0f;
-	private float firingTime = 0.0f;
-	public Vector3 firingVelocity;
-
+	public Transform turretHead;
 	public Transform turretNozzle;
+
+	// Internal variabls
+	private bool isEnemyInRange = true;
+	private float firingTime = 0.0f;
+
+	void Update(){
+		if (type == enemyTypes.Turret) {
+			turretBehave ();
+		}
+
+	}
 
 	public void takeDamage(int damage){
 		totalHealth -= damage;
@@ -38,51 +50,52 @@ public class BadGuysController : MonoBehaviour {
 		}
 	}
 
-	void Update(){
-		if (type == enemyTypes.Turret) {
-			turretBehave ();
-		}
-
-	}
-
-
 	void turretBehave(){
 		if (isEnemyInRange) {
-
 			aim();
+			fire();
+		}
+	}
 
-			if (Time.time > firingTime) {
-				MachineGunBullet bullet = AmmoHolder.holder.giveBullet ();
+	void fire ()
+	{
+		// Check if turret is ready to fire
+		if (Time.time > firingTime) {
+			// Get a bullet from the cache
+			MachineGunBullet bullet = AmmoHolder.holder.giveBullet ();
 
-				bullet.gameObject.layer = machineGunBullet.gameObject.layer;
-				bullet.gameObject.GetComponent<Renderer> ().sharedMaterials = machineGunBullet.gameObject.GetComponent<Renderer> ().sharedMaterials;
+			// Set it to be same as defined bullet
+			bullet.gameObject.layer = machineGunBullet.gameObject.layer;
+			bullet.gameObject.GetComponentInChildren<Renderer> ().sharedMaterials = machineGunBullet.gameObject.GetComponent<Renderer> ().sharedMaterials;
 
-				bullet.transform.position = turretNozzle.transform.position;
-				bullet.transform.SetParent (null);
-				bullet.GetComponent<Rigidbody> ().velocity = firingVelocity;
-				firingTime = Time.time + fireDelay;
-			}
+			// Place the bullet at the nozzle position & orientation
+			bullet.transform.position = turretNozzle.transform.position;
+			bullet.transform.rotation = turretNozzle.transform.rotation;
+			// Free the bullet
+			bullet.transform.SetParent (null);
+			// Fire
+			bullet.GetComponent<Rigidbody> ().velocity = turretNozzle.transform.forward * firingVelocity;
+			// Reset firing time
+			firingTime = Time.time + fireDelay;
 		}
 	}
 
 	void aim ()
 	{
+		// Get player position
 		Transform playerLocation = GameObject.FindObjectOfType<StargooseController> ().transform;
+		// Find the vector from this object to the player
 		Vector3 fromToVector = playerLocation.position - transform.position;
+		// Project onto y = plane
 		fromToVector.y = 0;
 
-		//print(fromToVector);
-		//print(playerLocation.position);
-		//print(Vector3.Angle(fromToVector,Vector3.forward));
-
-
+		// Get the angle of this vector and convert to a 360 degree representation
 		float aimAngle = Vector3.Angle (fromToVector, Vector3.forward);
-		aimAngle *= Mathf.Sign (Vector3.Cross (fromToVector, Vector3.forward).y);
-		if (aimAngle < 0) {
-			aimAngle += 360;
+		if (Vector3.Cross (fromToVector, Vector3.forward).y < 0) {
+			aimAngle = (aimAngle * -1) + 360;
 		}
 
-		print (aimAngle);
+		// Find which quadrant the player is in
 		if (aimAngle <= 45 / 2) {
 			aimAngle = 0;
 		} else if (aimAngle <= 45 + 45 / 2) {
@@ -98,15 +111,8 @@ public class BadGuysController : MonoBehaviour {
 		} else {
 			aimAngle = 0;
 		}
-
-
-
-
-
-		turretNozzle.rotation = Quaternion.Euler(0,-aimAngle,0);
-		//turretNozzle.rotation = Quaternion.Euler(0,Vector3.Angle(fromToVector,Vector3.forward),0);
-		//turretNozzle.r(0,Vector3.Angle(fromToVector,Vector3.forward),0,Space.World);
-
+		// Aim the turret towards player
+		turretHead.rotation = Quaternion.Euler(0,-aimAngle,0);
 	}
 
 
