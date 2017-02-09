@@ -74,14 +74,8 @@ public class BadGuysController : MonoBehaviour {
 		// Check if turret is ready to fire
 		if (Time.time > firingTime) {
 			print("Firing Mortar");
-			// WARNING Instantiating is expensive. This is a temp solution
-			// FIX FIX FIX FIX FIX FIX
-			MachineGunBullet bullet = GameObject.Instantiate(machineGunBullet);
+			MachineGunBullet bullet = AmmoHolder.holder.giveBullet(AmmoType.enemyMortar);
 			bullet.gameObject.SetActive(true);
-
-			// Set it to be same as defined bullet
-			//bullet.gameObject.layer = machineGunBullet.gameObject.layer;
-			//bullet.gameObject.GetComponentInChildren<Renderer> ().sharedMaterials = machineGunBullet.gameObject.GetComponent<Renderer> ().sharedMaterials;
 
 			// Place the bullet at the nozzle position & orientation
 			bullet.transform.position = turretNozzle.transform.position;
@@ -101,11 +95,6 @@ public class BadGuysController : MonoBehaviour {
 		if (Time.time > firingTime) {
 			// Get a bullet from the cache
 			MachineGunBullet bullet = AmmoHolder.holder.giveBullet (AmmoType.enemyMachineGun);
-
-			// Set it to be same as defined bullet
-			bullet.gameObject.layer = machineGunBullet.gameObject.layer;
-			bullet.gameObject.GetComponentInChildren<Renderer> ().sharedMaterials = machineGunBullet.gameObject.GetComponentInChildren<Renderer> ().sharedMaterials;
-			bullet.gameObject.GetComponentInChildren<MeshFilter> ().sharedMesh = machineGunBullet.gameObject.GetComponentInChildren<MeshFilter> ().sharedMesh;
 
 			// Place the bullet at the nozzle position & orientation
 			bullet.transform.position = turretNozzle.transform.position;
