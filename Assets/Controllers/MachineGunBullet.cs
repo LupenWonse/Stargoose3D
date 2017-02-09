@@ -17,6 +17,7 @@ public class MachineGunBullet : MonoBehaviour {
 	}
 
 	void OnTriggerEnter(Collider collider){
+
 		// Deal my damage
 		if (collider.GetComponent<BadGuysController> ()) {
 			collider.GetComponent<BadGuysController> ().takeDamage (bulletDamage);

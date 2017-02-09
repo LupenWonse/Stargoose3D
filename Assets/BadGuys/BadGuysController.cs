@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Enemy types
-public enum enemyTypes {Mine,Turret,RocketLauncher}
+public enum enemyTypes {Mine,Turret,Mortar,RocketLauncher}
 
 public class BadGuysController : MonoBehaviour {
 
@@ -24,9 +24,12 @@ public class BadGuysController : MonoBehaviour {
 	private bool isEnemyInRange = true;
 	private float firingTime = 0.0f;
 
-	void Update(){
+	void Update ()
+	{
 		if (type == enemyTypes.Turret) {
 			turretBehave ();
+		} else if (type == enemyTypes.Mortar) {
+			mortarBehave();
 		}
 
 	}
@@ -54,6 +57,41 @@ public class BadGuysController : MonoBehaviour {
 		if (isEnemyInRange) {
 			aim();
 			fire();
+		}
+	}
+
+	void mortarBehave ()
+	{
+		if (isEnemyInRange) {
+			aim();
+			mortarFire();
+		}
+
+	}
+
+	void mortarFire ()
+	{
+		// Check if turret is ready to fire
+		if (Time.time > firingTime) {
+			print("Firing Mortar");
+			// WARNING Instantiating is expensive. This is a temp solution
+			// FIX FIX FIX FIX FIX FIX
+			MachineGunBullet bullet = GameObject.Instantiate(machineGunBullet);
+			bullet.gameObject.SetActive(true);
+
+			// Set it to be same as defined bullet
+			//bullet.gameObject.layer = machineGunBullet.gameObject.layer;
+			//bullet.gameObject.GetComponentInChildren<Renderer> ().sharedMaterials = machineGunBullet.gameObject.GetComponent<Renderer> ().sharedMaterials;
+
+			// Place the bullet at the nozzle position & orientation
+			bullet.transform.position = turretNozzle.transform.position;
+			bullet.transform.rotation = turretNozzle.transform.rotation;
+			// Free the bullet
+			bullet.transform.SetParent (null);
+			// Fire
+			bullet.GetComponent<Rigidbody> ().velocity = turretNozzle.transform.forward * firingVelocity;
+			// Reset firing time
+			firingTime = Time.time + fireDelay;
 		}
 	}
 
@@ -111,8 +149,12 @@ public class BadGuysController : MonoBehaviour {
 		} else {
 			aimAngle = 0;
 		}
+
+		// Store temporarily the current rotation
+		Vector3 currentRotation = turretHead.rotation.eulerAngles;
+
 		// Aim the turret towards player
-		turretHead.rotation = Quaternion.Euler(0,-aimAngle,0);
+		turretHead.rotation = Quaternion.Euler(currentRotation.x,-aimAngle,currentRotation.z);
 	}
 
 
