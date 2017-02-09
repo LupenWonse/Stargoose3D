@@ -134,20 +134,20 @@ public class BadGuysController : MonoBehaviour {
 		}
 
 		// Find which quadrant the player is in
-		if (aimAngle <= 45 / 2) {
-			aimAngle = 0;
-		} else if (aimAngle <= 45 + 45 / 2) {
-			aimAngle = 45;
+		if (aimAngle <= 90) {
+			aimAngle = 180;
 		} else if (aimAngle <= 90 + 45 / 2) {
 			aimAngle = 90;
-		} else if (aimAngle >= 360 - 45 / 2) {
-			aimAngle = 0;
-		} else if (aimAngle >= 315 - 45 / 2) {
-			aimAngle = 315;
-		} else if (aimAngle >= 270 - 45 / 2) {
+		} else if (aimAngle <= 135 + 45 / 2) {
+			aimAngle = 135;
+		} else if (aimAngle <= 180 + 45 / 2) {
+			aimAngle = 180;
+		} else if (aimAngle <= 225 + 45 / 2) {
+			aimAngle = 225;
+		} else if (aimAngle <= 270 + 45 / 2) {
 			aimAngle = 270;
 		} else {
-			aimAngle = 0;
+			aimAngle = 180;
 		}
 
 		// Store temporarily the current rotation
