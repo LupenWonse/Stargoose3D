@@ -36,7 +36,6 @@ public class BadGuysController : MonoBehaviour {
 
 	public void takeDamage(int damage){
 		totalHealth -= damage;
-
 		if (totalHealth <= 0) {
 			Destroy (this.gameObject);
 		}
@@ -45,12 +44,13 @@ public class BadGuysController : MonoBehaviour {
 	public void OnTriggerEnter (Collider collider){
 		if (collider.GetComponent<StargooseController> ()) {
 			collider.GetComponent<StargooseController> ().takeDamage (hitDamage);
+			if (type == enemyTypes.Mine) {
+				// Mines get destroyed when the stargoose hits them
+				explode();
+			}
 		}
 
-		if (type == enemyTypes.Mine) {
-			// Mines get destroyed when the stargoose hits them
-			explode();
-		}
+
 	}
 
 	void turretBehave(){
