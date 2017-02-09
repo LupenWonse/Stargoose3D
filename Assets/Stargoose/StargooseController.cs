@@ -183,9 +183,10 @@ public class StargooseController : MonoBehaviour {
 	private void shootMachineGun(){
 		if (ammo > 0) {
 			// Get the next bullet from the ammo holder
-			MachineGunBullet newBullet = ammoHolder.giveBullet ();
+			MachineGunBullet newBullet = ammoHolder.giveBullet (AmmoType.playerMachineGun);
 			newBullet.gameObject.layer = bullet.gameObject.layer;
-			newBullet.GetComponent<Renderer> ().sharedMaterial = bullet.GetComponent<Renderer> ().sharedMaterial;
+			newBullet.GetComponentInChildren<Renderer> ().sharedMaterial = bullet.GetComponentInChildren<Renderer> ().sharedMaterial;
+			newBullet.gameObject.GetComponentInChildren<MeshFilter> ().sharedMesh = bullet.gameObject.GetComponentInChildren<MeshFilter> ().sharedMesh;
 
 			// Position and fire the bullet
 			if (shootingLeft) {
@@ -195,7 +196,7 @@ public class StargooseController : MonoBehaviour {
 			}
 			// Switch shooting nozzle
 			shootingLeft = !shootingLeft;
-			newBullet.transform.SetParent (null);
+			//newBullet.transform.SetParent (null);
 			newBullet.GetComponent<Rigidbody> ().velocity = firingVelocity;
 			ammo -= 1;
 			gunfireFX.Play ();
