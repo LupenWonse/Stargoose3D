@@ -28,7 +28,7 @@ public class StargooseController : MonoBehaviour {
 	private Rocket leftRocket = null, rightRocket = null;
 
 	// Machine Guns
-	[SerializeField] private MachineGunBullet bullet;
+	[SerializeField] private MachineGunBullet bullet = null;
 	[SerializeField] private Transform machineGunLeftNozzle = null;
 	[SerializeField] private Transform machineGunRightNozzle = null;
 
@@ -96,12 +96,24 @@ public class StargooseController : MonoBehaviour {
 		forwardThrust = Input.GetAxis ("Vertical");
 
 		// Key Presses
+		/*
 		if (Input.GetMouseButton (0) && Time.time > refireTime) {
 			shootMachineGun ();
 			refireTime = Time.time + fireDelay;
 		}
+		*/
+		if (Input.GetButton("Fire1") && Time.time > refireTime) {
+			shootMachineGun ();
+			refireTime = Time.time + fireDelay;
+		}
 
-		if (Input.GetKeyDown (KeyCode.Q)) {
+
+
+
+	//	print (Input.GetAxis ("Fire1"));
+			
+
+		if (Input.GetButtonDown("ReloadLeft")) {
 		print(leftRocket);
 			if (leftRocket == null) {
 				reloadLeftRocket ();
@@ -110,7 +122,7 @@ public class StargooseController : MonoBehaviour {
 			}
 		}
 
-		if (Input.GetKeyDown (KeyCode.E)) {
+		if (Input.GetButtonDown("ReloadRight")) {
 			if (rightRocket == null) {
 				reloadRightRocket ();
 			} else {
