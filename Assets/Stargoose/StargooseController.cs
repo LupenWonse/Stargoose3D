@@ -80,11 +80,11 @@ public class StargooseController : MonoBehaviour {
 	void Update ()
 	{
 		// Movement handling
-		float horizontalThrust  = Input.GetAxis ("Horizontal");
-		float forwardThrust  = Input.GetAxis ("Vertical");
+		horizontalThrust  = Input.GetAxis ("Horizontal");
+		forwardThrust  = Input.GetAxis ("Vertical");
 
 		transform.position = transform.position + horizontalThrust * horizontalSpeed * Time.deltaTime * Vector3.right + forwardThrust*forwardSpeed*Time.deltaTime*Vector3.forward;
-
+		transform.position = new Vector3(transform.position.x,transform.position.y,Mathf.Clamp(transform.position.z,gameField.transform.position.z - forwardDistanceAllowed, gameField.transform.position.z + forwardDistanceAllowed));
 
 		//GetComponent<Rigidbody> ().MovePosition (transform.position + Vector3.forward);
 		Ray frontLeftRay= new Ray(frontLeftPad.position,Vector3.down);
