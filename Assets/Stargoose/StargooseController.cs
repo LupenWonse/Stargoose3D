@@ -15,7 +15,6 @@ public class StargooseController : MonoBehaviour {
 	[SerializeField] private float forwardSpeed = 0.5f;
 	[SerializeField] private float horizontalSpeed = 0.5f;
 	[SerializeField] private float fireDelay = 0.1f;
-
 	[SerializeField] private float refireTime = 0.1f;
 
 
@@ -35,6 +34,8 @@ public class StargooseController : MonoBehaviour {
 
 	// Flying contact points
 	public Transform frontRightPad,frontLeftPad,rearRightPad,rearLeftPad;
+
+	public LayerMask floorMask;
 
 
 	[Header ("Sound FX")]
@@ -79,6 +80,8 @@ public class StargooseController : MonoBehaviour {
 
 	void Update ()
 	{
+
+
 		// Movement handling
 		horizontalThrust  = Input.GetAxis ("Horizontal");
 		forwardThrust  = Input.GetAxis ("Vertical");
@@ -97,9 +100,9 @@ public class StargooseController : MonoBehaviour {
 		RaycastHit rearLeftRaycastResult = new RaycastHit ();
 		RaycastHit rearRightRaycastResult = new RaycastHit ();
 
-		Physics.Raycast (rearLeftRay, out rearLeftRaycastResult);
-		Physics.Raycast (frontLeftRay, out frontLeftRaycastResult);
-		Physics.Raycast (frontRightRay, out frontRightRaycastResult);
+		Physics.Raycast (rearLeftRay, out rearLeftRaycastResult, 15, floorMask);
+		Physics.Raycast (frontLeftRay, out frontLeftRaycastResult, 15, floorMask);
+		Physics.Raycast (frontRightRay, out frontRightRaycastResult, 15, floorMask);
 
 
 		float height = (frontLeftRaycastResult.point.y + rearLeftRaycastResult.point.y)/2.0f + 1.0f;
