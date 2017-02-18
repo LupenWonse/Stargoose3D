@@ -7,6 +7,7 @@ public class StargooseController : MonoBehaviour {
 	[Header ("Initialization")]
 	public int rockets = 6;
 	public int fuel = 100, shield = 100, ammo = 100;
+	public float pushForce = 1000.0f;
 
 
 	[Header ("Gameplay")]
@@ -32,6 +33,8 @@ public class StargooseController : MonoBehaviour {
 	[SerializeField] private Transform machineGunLeftNozzle = null;
 	[SerializeField] private Transform machineGunRightNozzle = null;
 
+	// Flying contact points
+	public Transform frontRightPad,frontLeftPad,rearRightPad,rearLeftPad;
 
 
 	[Header ("Sound FX")]
@@ -65,36 +68,56 @@ public class StargooseController : MonoBehaviour {
 		gameField = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
 
 		// Initialize our rigidbody
-		rigidbody = GetComponent<Rigidbody>();
+		//rigidbody = GetComponent<Rigidbody>();
 		this.fuel = 100;
 
 	}
 
 	void FixedUpdate () {
-		// Clamp by disallowing thrust in the direction where we hit the limit
-		if (transform.position.z < gameField.transform.position.z - forwardDistanceAllowed) {
-			forwardThrust = Mathf.Max (0.0f, forwardThrust);
-		} else if (transform.position.z > gameField.transform.position.z + forwardDistanceAllowed) {
-			forwardThrust = Mathf.Min (0.0f, forwardThrust);
-		}
-
-		if (transform.position.x < gameField.transform.position.x - forwardDistanceAllowed) {
-			horizontalThrust = Mathf.Max (0.0f, horizontalThrust);
-		} else if (transform.position.x > gameField.transform.position.x + forwardDistanceAllowed) {
-			horizontalThrust = Mathf.Min (0.0f, horizontalThrust);
-		}
-
-		// Set our velocity based on the current thrust rates
-		rigidbody.velocity = new Vector3(horizontalSpeed * horizontalThrust,Mathf.Min(rigidbody.velocity.y,0),forwardSpeed * forwardThrust + gameField.gameSpeed);
+		
 	}
 
 	void Update ()
 	{
-		// Input Handling
-		// Axes
-		horizontalThrust = Input.GetAxis ("Horizontal");
-		forwardThrust = Input.GetAxis ("Vertical");
+		// Movement handling
+		float horizontalThrust  = Input.GetAxis ("Horizontal");
+		float forwardThrust  = Input.GetAxis ("Vertical");
 
+		transform.position = transform.position + horizontalThrust * horizontalSpeed * Time.deltaTime * Vector3.right + forwardThrust*forwardSpeed*Time.deltaTime*Vector3.forward;
+
+
+		//GetComponent<Rigidbody> ().MovePosition (transform.position + Vector3.forward);
+		Ray frontLeftRay= new Ray(frontLeftPad.position,Vector3.down);
+		Ray rearLeftRay= new Ray(rearLeftPad.position,Vector3.down);
+		Ray frontRightRay = new Ray (frontRightPad.position, Vector3.down);
+		Ray rearRightRay = new Ray (rearRightPad.position, Vector3.down);
+
+		RaycastHit frontRightRaycastResult = new RaycastHit ();
+		RaycastHit frontLeftRaycastResult = new RaycastHit ();
+		RaycastHit rearLeftRaycastResult = new RaycastHit ();
+		RaycastHit rearRightRaycastResult = new RaycastHit ();
+
+		Physics.Raycast (rearLeftRay, out rearLeftRaycastResult);
+		Physics.Raycast (frontLeftRay, out frontLeftRaycastResult);
+		Physics.Raycast (frontRightRay, out frontRightRaycastResult);
+
+
+		float height = (frontLeftRaycastResult.point.y + rearLeftRaycastResult.point.y)/2.0f + 1.0f;
+
+		//float pitch = Mathf.Atan((frontRaycastResult.point.y - backRaycastResult.point.y) / (front.position.z - back.position.z));
+
+		float pitch =  Mathf.Atan2((frontLeftRaycastResult.point.y - rearLeftRaycastResult.point.y), (frontLeftPad.position.z - rearLeftPad.position.z)) * Mathf.Rad2Deg;
+		float roll = Mathf.Atan2((frontLeftRaycastResult.point.y - frontRightRaycastResult.point.y), (frontRightPad.position.x - frontLeftPad.position.x)) * Mathf.Rad2Deg;
+
+		transform.rotation = Quaternion.Euler (-pitch, 0, -roll);
+		//GetComponent<Rigidbody> ().MovePosition (new Vector3(transform.position.x,height,transform.position.z));
+		transform.position = new Vector3(transform.position.x,height,transform.position.z);
+
+
+		//GetComponent<Rigidbody>().AddForce( new Vector3(0,0,5));
+
+		//GetComponent<Rigidbody> ().AddForce (0, (2 - testHit.distance) * 100 / testHit.distance, 0);
+		//GetComponent<Rigidbody>().velocity  = new Vector3(0,GetComponent<Rigidbody>().velocity.y,10);
 		// Key Presses
 		/*
 		if (Input.GetMouseButton (0) && Time.time > refireTime) {
@@ -135,9 +158,9 @@ public class StargooseController : MonoBehaviour {
 	void LateUpdate ()
 	{
 		// Hack to freeze rotation
-		Vector3 currentRotation = rigidbody.rotation.eulerAngles;
-		currentRotation.y = 0;
-		rigidbody.rotation = Quaternion.Euler(currentRotation);
+		//Vector3 currentRotation = rigidbody.rotation.eulerAngles;
+		//currentRotation.y = 0;
+		//rigidbody.rotation = Quaternion.Euler(currentRotation);
 	}
 
 	// Damage functions
