@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class StargooseController : MonoBehaviour {
 
-	public bool isInTunnel = false;
+
 
 	[Header ("Initialization")]
 	public int rockets = 6;
@@ -19,6 +19,14 @@ public class StargooseController : MonoBehaviour {
 	[SerializeField] private float fireDelay = 0.1f;
 	[SerializeField] private float refireTime = 0.1f;
 
+
+	[Header ("Tunnel Physics")]
+	public bool isInTunnel = false;
+	[SerializeField] private float mass = 1000.0f;
+	[SerializeField] private float angularMass = 20.0f;
+	[SerializeField] private float angularDrag = 0.95f;
+	[SerializeField] private float tunnelHorizontalThrust = 5.0f;
+	private float gravity = 9.81f;
 
 	[Header ("Connections")]
 	// Rocket prefab
@@ -248,22 +256,20 @@ public class StargooseController : MonoBehaviour {
 		}
 	}
 
-	private float angularSpeed, angularDrag;
-	public void inTunnelMovement(){
+	private float angularSpeed;
+	private Vector2 thrustForce, gravityForce;
 
-		float mass = 1000.0f;
-		angularDrag = 0.95f;
-		//angularSpeed = horizontalThrust;
+	public void inTunnelMovement(){
 
 
 		Vector2 totalForce;
-		Vector2 thrustForce = new Vector2 (transform.right.x, transform.right.y) * horizontalThrust * 5.0f * mass;
-		Vector2 gravityForce = Vector2.down * 9.81f * mass;
+		Vector2 thrustForce = new Vector2 (transform.right.x, transform.right.y) * horizontalThrust * tunnelHorizontalThrust;
+		Vector2 gravityForce = Vector2.down * gravity * mass;
 		totalForce = thrustForce + gravityForce;
 
 		float finalForce = Vector2.Dot (totalForce, transform.right);
 
-		angularSpeed += finalForce * Time.deltaTime /20;
+		angularSpeed += finalForce * Time.deltaTime / angularMass;
 		angularSpeed = angularSpeed - angularDrag * angularSpeed * Time.deltaTime;
 
 		print ("Thrust Force: " + thrustForce);
