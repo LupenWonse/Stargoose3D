@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class StargooseController : MonoBehaviour {
 
+	public bool isInTunnel = false;
+
 	[Header ("Initialization")]
 	public int rockets = 6;
 	public int fuel = 100, shield = 100, ammo = 100;
@@ -85,6 +87,12 @@ public class StargooseController : MonoBehaviour {
 		// Movement handling
 		horizontalThrust  = Input.GetAxis ("Horizontal");
 		forwardThrust  = Input.GetAxis ("Vertical");
+
+		if (isInTunnel) {
+			inTunnelMovement ();
+			return;
+		}
+
 
 		transform.position = transform.position + horizontalThrust * horizontalSpeed * Time.deltaTime * Vector3.right + forwardThrust*forwardSpeed*Time.deltaTime*Vector3.forward;
 		transform.position = new Vector3(transform.position.x,transform.position.y,Mathf.Clamp(transform.position.z,gameField.transform.position.z - forwardDistanceAllowed, gameField.transform.position.z + forwardDistanceAllowed));
@@ -215,9 +223,6 @@ public class StargooseController : MonoBehaviour {
 	}
 
 
-
-
-
 	private void shootMachineGun(){
 		if (ammo > 0) {
 			// Get the next bullet from the ammo holder
@@ -241,5 +246,27 @@ public class StargooseController : MonoBehaviour {
 		} else {
 			// Machine Gun Empty
 		}
+	}
+
+	private float angularSpeed, angularDrag;
+	public void inTunnelMovement(){
+		angularDrag = 0.95f;
+		//angularSpeed = horizontalThrust;
+
+
+		Vector2 totalForce = new Vector2 (0, 0);
+		Vector2 thrustForce = new Vector2 (transform.right.x, transform.right.y) * horizontalThrust * 5;
+		Vector2 gravityForce = Vector2.down * 10;
+		totalForce = thrustForce + gravityForce;
+
+		float finalForce = Vector2.Dot (totalForce, transform.right);
+		print (angularSpeed);
+		angularSpeed += finalForce;
+		angularSpeed *= angularDrag;
+
+
+
+		Transform tunnel = GameObject.Find ("Tunnel").transform;
+		transform.RotateAround (tunnel.position, tunnel.forward, angularSpeed);
 	}
 }
