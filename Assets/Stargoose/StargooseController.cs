@@ -26,6 +26,9 @@ public class StargooseController : MonoBehaviour {
 	[SerializeField] private float angularMass = 20.0f;
 	[SerializeField] private float angularDrag = 0.95f;
 	[SerializeField] private float tunnelHorizontalThrust = 5.0f;
+	[SerializeField] private float tunnelConstantForwardSpeed = 5.0f;
+	[SerializeField] private float tunnelReverseSpeed = 5.0f;
+	[SerializeField] private float tunnelForwardSpeed = 15.0f;
 	private float gravity = 9.81f;
 	private Transform currentTunnel;
 
@@ -266,6 +269,8 @@ public class StargooseController : MonoBehaviour {
 	private Vector2 thrustForce, gravityForce;
 
 	public void inTunnelMovement(){
+		float speed;
+
 		thrustForce = new Vector2 (transform.right.x, transform.right.y) * horizontalThrust * tunnelHorizontalThrust;
 		gravityForce = Vector2.down * gravity * mass;
 
@@ -274,5 +279,14 @@ public class StargooseController : MonoBehaviour {
 		angularSpeed += finalForce * Time.deltaTime / angularMass;
 		angularSpeed = angularSpeed - angularDrag * angularSpeed * Time.deltaTime;
 		transform.RotateAround (currentTunnel.position, currentTunnel.forward, angularSpeed*Time.deltaTime);
+
+		if (forwardThrust > 0){
+			speed = tunnelConstantForwardSpeed + forwardThrust * tunnelForwardSpeed;
+		} else {
+			speed = tunnelConstantForwardSpeed + forwardThrust * tunnelReverseSpeed;
+		}
+		print (speed);
+
+		transform.position += Vector3.forward * speed * Time.deltaTime;
 	}
 }
