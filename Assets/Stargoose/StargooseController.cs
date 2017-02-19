@@ -27,6 +27,7 @@ public class StargooseController : MonoBehaviour {
 	[SerializeField] private float angularDrag = 0.95f;
 	[SerializeField] private float tunnelHorizontalThrust = 5.0f;
 	private float gravity = 9.81f;
+	private Transform currentTunnel;
 
 	[Header ("Connections")]
 	// Rocket prefab
@@ -70,6 +71,9 @@ public class StargooseController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		currentTunnel = GameObject.Find ("Tunnel").transform;
+		print (currentTunnel);
+
 		ammoHolder = AmmoHolder.holder;
 
 		if (ammoHolder == null) {
@@ -81,6 +85,8 @@ public class StargooseController : MonoBehaviour {
 		// Initialize our rigidbody
 		//rigidbody = GetComponent<Rigidbody>();
 		this.fuel = 100;
+
+
 
 	}
 
@@ -260,22 +266,13 @@ public class StargooseController : MonoBehaviour {
 	private Vector2 thrustForce, gravityForce;
 
 	public void inTunnelMovement(){
+		thrustForce = new Vector2 (transform.right.x, transform.right.y) * horizontalThrust * tunnelHorizontalThrust;
+		gravityForce = Vector2.down * gravity * mass;
 
-
-		Vector2 totalForce;
-		Vector2 thrustForce = new Vector2 (transform.right.x, transform.right.y) * horizontalThrust * tunnelHorizontalThrust;
-		Vector2 gravityForce = Vector2.down * gravity * mass;
-		totalForce = thrustForce + gravityForce;
-
-		float finalForce = Vector2.Dot (totalForce, transform.right);
+		float finalForce = Vector2.Dot (thrustForce + gravityForce, transform.right);
 
 		angularSpeed += finalForce * Time.deltaTime / angularMass;
 		angularSpeed = angularSpeed - angularDrag * angularSpeed * Time.deltaTime;
-
-		print ("Thrust Force: " + thrustForce);
-		print ("Angular Speed: " + angularSpeed);
-		print ("Horizontal Force: " + finalForce);
-		Transform tunnel = GameObject.Find ("Tunnel").transform;
-		transform.RotateAround (tunnel.position, tunnel.forward, angularSpeed*Time.deltaTime);
+		transform.RotateAround (currentTunnel.position, currentTunnel.forward, angularSpeed*Time.deltaTime);
 	}
 }
