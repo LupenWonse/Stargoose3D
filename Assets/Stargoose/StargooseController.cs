@@ -250,23 +250,26 @@ public class StargooseController : MonoBehaviour {
 
 	private float angularSpeed, angularDrag;
 	public void inTunnelMovement(){
+
+		float mass = 1000.0f;
 		angularDrag = 0.95f;
 		//angularSpeed = horizontalThrust;
 
 
-		Vector2 totalForce = new Vector2 (0, 0);
-		Vector2 thrustForce = new Vector2 (transform.right.x, transform.right.y) * horizontalThrust * 5;
-		Vector2 gravityForce = Vector2.down * 10;
+		Vector2 totalForce;
+		Vector2 thrustForce = new Vector2 (transform.right.x, transform.right.y) * horizontalThrust * 5.0f * mass;
+		Vector2 gravityForce = Vector2.down * 9.81f * mass;
 		totalForce = thrustForce + gravityForce;
 
 		float finalForce = Vector2.Dot (totalForce, transform.right);
-		print (angularSpeed);
-		angularSpeed += finalForce;
-		angularSpeed *= angularDrag;
 
+		angularSpeed += finalForce * Time.deltaTime /20;
+		angularSpeed = angularSpeed - angularDrag * angularSpeed * Time.deltaTime;
 
-
+		print ("Thrust Force: " + thrustForce);
+		print ("Angular Speed: " + angularSpeed);
+		print ("Horizontal Force: " + finalForce);
 		Transform tunnel = GameObject.Find ("Tunnel").transform;
-		transform.RotateAround (tunnel.position, tunnel.forward, angularSpeed);
+		transform.RotateAround (tunnel.position, tunnel.forward, angularSpeed*Time.deltaTime);
 	}
 }
