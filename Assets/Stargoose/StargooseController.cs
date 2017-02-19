@@ -4,23 +4,21 @@ using UnityEngine;
 
 public class StargooseController : MonoBehaviour {
 
-
-
 	[Header ("Initialization")]
 	public int rockets = 6;
 	public int fuel = 100, shield = 100, ammo = 100;
 	public float pushForce = 1000.0f;
 
-
-	[Header ("Gameplay")]
+	[Header ("Gameplay - Planet")]
 	// Gameplay variables
 	[SerializeField] private float forwardSpeed = 0.5f;
 	[SerializeField] private float horizontalSpeed = 0.5f;
 	[SerializeField] private float fireDelay = 0.1f;
 	[SerializeField] private float refireTime = 0.1f;
+	[SerializeField] private Vector3 firingVelocity = new Vector3(0f,0f,50f);
 
 
-	[Header ("Tunnel Physics")]
+	[Header ("Gameplay - Tunnel")]
 	public bool isInTunnel = false;
 	[SerializeField] private float mass = 1000.0f;
 	[SerializeField] private float angularMass = 20.0f;
@@ -40,37 +38,29 @@ public class StargooseController : MonoBehaviour {
 	[SerializeField] private Transform rightRocketPosition = null;
 	// Rocket objects
 	private Rocket leftRocket = null, rightRocket = null;
+	// Flying contact points
+	public Transform frontRightPad,frontLeftPad,rearRightPad,rearLeftPad;
+	public LayerMask floorMask;
 
 	// Machine Guns
 	[SerializeField] private MachineGunBullet bullet = null;
 	[SerializeField] private Transform machineGunLeftNozzle = null;
 	[SerializeField] private Transform machineGunRightNozzle = null;
 
-	// Flying contact points
-	public Transform frontRightPad,frontLeftPad,rearRightPad,rearLeftPad;
-
-	public LayerMask floorMask;
-
-
 	[Header ("Sound FX")]
 	[SerializeField] private AudioSource gunfireFX = null;
+
 
 	// Internal variables - DO NOT SERIALIZE
 	private float horizontalThrust = 0;
 	private float forwardThrust = 0;
-
 	private bool shootingLeft = true;
 	private float forwardDistanceAllowed = 25.0f;
-
-	private Vector3 firingVelocity = new Vector3(0f,0f,50f);
-
-
 	// Internal connections that will be setup during Start
 	private AmmoHolder ammoHolder;
 	private GameController gameField;
 	// Internal holder variables for optimization purposes
 	private new Rigidbody rigidbody;
-
 
 	// Use this for initialization
 	void Start () {
@@ -84,13 +74,6 @@ public class StargooseController : MonoBehaviour {
 		}
 
 		gameField = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
-
-		// Initialize our rigidbody
-		//rigidbody = GetComponent<Rigidbody>();
-		this.fuel = 100;
-
-
-
 	}
 
 	void FixedUpdate () {
@@ -99,8 +82,6 @@ public class StargooseController : MonoBehaviour {
 
 	void Update ()
 	{
-
-
 		// Movement handling
 		horizontalThrust  = Input.GetAxis ("Horizontal");
 		forwardThrust  = Input.GetAxis ("Vertical");
@@ -138,31 +119,14 @@ public class StargooseController : MonoBehaviour {
 		float roll = Mathf.Atan2((frontLeftRaycastResult.point.y - frontRightRaycastResult.point.y), (frontRightPad.position.x - frontLeftPad.position.x)) * Mathf.Rad2Deg;
 
 		transform.rotation = Quaternion.Euler (-pitch, 0, -roll);
-		//GetComponent<Rigidbody> ().MovePosition (new Vector3(transform.position.x,height,transform.position.z));
 		transform.position = new Vector3(transform.position.x,height,transform.position.z);
 
 
-		//GetComponent<Rigidbody>().AddForce( new Vector3(0,0,5));
-
-		//GetComponent<Rigidbody> ().AddForce (0, (2 - testHit.distance) * 100 / testHit.distance, 0);
-		//GetComponent<Rigidbody>().velocity  = new Vector3(0,GetComponent<Rigidbody>().velocity.y,10);
-		// Key Presses
-		/*
-		if (Input.GetMouseButton (0) && Time.time > refireTime) {
-			shootMachineGun ();
-			refireTime = Time.time + fireDelay;
-		}
-		*/
+		// INPUT HANDLING
 		if (Input.GetButton("Fire1") && Time.time > refireTime) {
 			shootMachineGun ();
 			refireTime = Time.time + fireDelay;
 		}
-
-
-
-
-	//	print (Input.GetAxis ("Fire1"));
-			
 
 		if (Input.GetButtonDown("ReloadLeft")) {
 		print(leftRocket);
@@ -183,21 +147,10 @@ public class StargooseController : MonoBehaviour {
 
 	}
 
-	void LateUpdate ()
-	{
-		// Hack to freeze rotation
-		//Vector3 currentRotation = rigidbody.rotation.eulerAngles;
-		//currentRotation.y = 0;
-		//rigidbody.rotation = Quaternion.Euler(currentRotation);
-	}
-
 	// Damage functions
 	public void takeDamage(int damage){
 		shield -= damage;
 	}
-
-
-
 
 	private void reloadLeftRocket ()
 	{
