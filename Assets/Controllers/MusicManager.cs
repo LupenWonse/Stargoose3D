@@ -7,12 +7,11 @@ public class MusicManager : MonoBehaviour {
 
 	// Using Load function to use a singleton pattern
 	void Awake () {
-		print ("Awake");
 		if (singleMusicManager == null) {
-			print ("singleton");
 			DontDestroyOnLoad (this.gameObject);
 			singleMusicManager = this;
 		} else {
+			Debug.LogWarning ("Music Manager is loaded more than once. Destroying new instance");
 			GameObject.Destroy (this.gameObject);
 		}
 	}

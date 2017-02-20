@@ -43,19 +43,16 @@ public class AmmoHolder : MonoBehaviour {
 		// playerMachineGun
 		for (int i = 0; i < playerMachineGun.stock; i++) {
 			playerMachineGunBullets.Push( GameObject.Instantiate (playerMachineGun.prefab,transform).GetComponent<MachineGunBullet>());
-			print ("Creating Ammo");
 		}
 
 		// enemyMachineGun
 		for (int i = 0; i < enemyMachineGun.stock; i++) {
 			enemnyMachineGunBullets.Push( GameObject.Instantiate (enemyMachineGun.prefab,transform).GetComponent<MachineGunBullet>());
-			print ("Creating Ammo");
 		}
 
 		// enemyMortar
 		for (int i = 0; i < enemyMortar.stock; i++) {
 			enemyMortarBullets.Push( GameObject.Instantiate (enemyMortar.prefab,transform).GetComponent<MachineGunBullet>());
-			print ("Creating Ammo");
 		}
 
 	}

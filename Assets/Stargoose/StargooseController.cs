@@ -64,16 +64,16 @@ public class StargooseController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		currentTunnel = GameObject.Find ("Tunnel").transform;
-		print (currentTunnel);
-
 		ammoHolder = AmmoHolder.holder;
 
 		if (ammoHolder == null) {
 			Debug.LogError ("No Ammo Holder found on the player ship!");
 		}
 
-		gameField = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController> ();
+		if (GameObject.FindObjectOfType<GameController> ()) {
+			gameField = GameObject.FindObjectOfType<GameController> ();
+		}
+			
 	}
 
 	void FixedUpdate () {
@@ -88,12 +88,17 @@ public class StargooseController : MonoBehaviour {
 		horizontalThrust  = Input.GetAxis ("Horizontal");
 		forwardThrust  = Input.GetAxis ("Vertical");
 
+
+
 		if (isInTunnel) {
 			inTunnelMovement ();
-			return;
+		} else {
+			onPlanetMovement ();
 		}
 
+	}
 
+	private void onPlanetMovement(){
 		transform.position = transform.position + horizontalThrust * horizontalSpeed * Time.deltaTime * Vector3.right + forwardThrust*forwardSpeed*Time.deltaTime*Vector3.forward;
 		transform.position = new Vector3(transform.position.x,transform.position.y,Mathf.Clamp(transform.position.z,gameField.transform.position.z - forwardDistanceAllowed, gameField.transform.position.z + forwardDistanceAllowed));
 
@@ -137,7 +142,7 @@ public class StargooseController : MonoBehaviour {
 		}
 
 		if (Input.GetButtonDown("ReloadLeft")) {
-		print(leftRocket);
+			print(leftRocket);
 			if (leftRocket == null) {
 				reloadLeftRocket ();
 			} else {
@@ -152,7 +157,6 @@ public class StargooseController : MonoBehaviour {
 				fireRightRocket ();
 			}
 		}
-
 	}
 
 	// Damage functions

@@ -73,7 +73,6 @@ public class BadGuysController : MonoBehaviour {
 	{
 		// Check if turret is ready to fire
 		if (Time.time > firingTime) {
-			print("Firing Mortar");
 			MachineGunBullet bullet = AmmoHolder.holder.giveBullet(AmmoType.enemyMortar);
 			bullet.gameObject.SetActive(true);
 
