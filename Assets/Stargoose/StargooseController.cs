@@ -111,10 +111,11 @@ public class StargooseController : MonoBehaviour {
 		Physics.Raycast (rearLeftRay, out rearLeftRaycastResult, 15, floorMask);
 		Physics.Raycast (frontLeftRay, out frontLeftRaycastResult, 15, floorMask);
 		Physics.Raycast (frontRightRay, out frontRightRaycastResult, 15, floorMask);
+		Physics.Raycast (rearRightRay, out rearRightRaycastResult, 15, floorMask);
 
 
-		//float height = (frontLeftRaycastResult.point.y + rearLeftRaycastResult.point.y + frontRightRaycastResult.point.y + rearRightRaycastResult.point.y)/4.0f + .1f;
-		height = Mathf.Max(new float[] {frontLeftRaycastResult.point.y,rearLeftRaycastResult.point.y,frontRightRaycastResult.point.y,rearRightRaycastResult.point.y});
+		float height = (frontLeftRaycastResult.point.y + rearLeftRaycastResult.point.y + frontRightRaycastResult.point.y + rearRightRaycastResult.point.y)/4.0f + .1f;
+		//height = Mathf.Max(new float[] {frontLeftRaycastResult.point.y,rearLeftRaycastResult.point.y,frontRightRaycastResult.point.y,rearRightRaycastResult.point.y});
 
 
 		//float pitch = Mathf.Atan((frontRaycastResult.point.y - backRaycastResult.point.y) / (front.position.z - back.position.z));
