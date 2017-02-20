@@ -80,6 +80,8 @@ public class StargooseController : MonoBehaviour {
 		
 	}
 
+	private float height;
+
 	void Update ()
 	{
 		// Movement handling
@@ -111,12 +113,17 @@ public class StargooseController : MonoBehaviour {
 		Physics.Raycast (frontRightRay, out frontRightRaycastResult, 15, floorMask);
 
 
-		float height = (frontLeftRaycastResult.point.y + rearLeftRaycastResult.point.y)/2.0f + 1.0f;
+		//float height = (frontLeftRaycastResult.point.y + rearLeftRaycastResult.point.y + frontRightRaycastResult.point.y + rearRightRaycastResult.point.y)/4.0f + .1f;
+		height = Mathf.Max(new float[] {frontLeftRaycastResult.point.y,rearLeftRaycastResult.point.y,frontRightRaycastResult.point.y,rearRightRaycastResult.point.y});
+
 
 		//float pitch = Mathf.Atan((frontRaycastResult.point.y - backRaycastResult.point.y) / (front.position.z - back.position.z));
 
 		float pitch =  Mathf.Atan2((frontLeftRaycastResult.point.y - rearLeftRaycastResult.point.y), (frontLeftPad.position.z - rearLeftPad.position.z)) * Mathf.Rad2Deg;
-		float roll = Mathf.Atan2((frontLeftRaycastResult.point.y - frontRightRaycastResult.point.y), (frontRightPad.position.x - frontLeftPad.position.x)) * Mathf.Rad2Deg;
+		float roll1 = Mathf.Atan2((frontLeftRaycastResult.point.y - frontRightRaycastResult.point.y), (frontRightPad.position.x - frontLeftPad.position.x)) * Mathf.Rad2Deg;
+		float roll2 = Mathf.Atan2((rearLeftRaycastResult.point.y - rearRightRaycastResult.point.y), (rearRightPad.position.x - rearLeftPad.position.x)) * Mathf.Rad2Deg;
+
+		float roll = Mathf.Min (roll1, roll2);
 
 		transform.rotation = Quaternion.Euler (-pitch, 0, -roll);
 		transform.position = new Vector3(transform.position.x,height,transform.position.z);
