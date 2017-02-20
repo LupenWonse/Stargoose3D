@@ -5,8 +5,7 @@ using UnityEngine;
 public class Cameraman : MonoBehaviour {
 
 
-	private GameObject stargoose;
-	private GameController gameField;
+	private StargooseController stargoose;
 	[SerializeField] private LayerMask floor = new LayerMask();
 
 	private Vector3 cameraTarget;
@@ -23,7 +22,7 @@ public class Cameraman : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		// Initialize player object
-		stargoose = GameObject.FindGameObjectWithTag ("Player");
+		stargoose = GameObject.FindGameObjectWithTag ("Player").GetComponent<StargooseController>();
 		if (stargoose == null) {
 			Debug.LogError ("No Player Game Object Was Found");
 		} else {
@@ -31,14 +30,6 @@ public class Cameraman : MonoBehaviour {
 			cameraTarget = (stargoose.transform.position - transform.position + Vector3.forward*30);
 			cameraElevation = (stargoose.transform.position.z - transform.position.z) / 3;
 			cameraSlide = (stargoose.transform.position.x);
-		}
-
-		gameField = GameObject.FindGameObjectWithTag ("GameController").GetComponent<GameController>();
-		if (gameField == null) {
-			Debug.LogError ("No Game Controller Object is found");
-		} else {
-			// Initialiaze camera position
-			cameraDistance = (gameField.transform.position.z - 40.0f);
 		}
 	}
 	
@@ -65,11 +56,9 @@ public class Cameraman : MonoBehaviour {
 		cameraElevation = Mathf.SmoothDamp (cameraElevation, newElevation, ref cameraElevationVelocity, smoothTime);
 		cameraSlide =  Mathf.SmoothDamp (cameraSlide, newSlide, ref cameraSlideVelocity, smoothTime);
 
-		cameraDistance = (gameField.transform.position.z - 40.0f);
+		cameraDistance = (stargoose.getCurrentForwardLocation() - 40.0f);
 
 		transform.rotation = Quaternion.LookRotation (cameraTarget);
 		transform.position = new Vector3 (cameraSlide, cameraElevation, cameraDistance);
-		//stargoose.transform.position = hitObject.point;
-
 	}
 }

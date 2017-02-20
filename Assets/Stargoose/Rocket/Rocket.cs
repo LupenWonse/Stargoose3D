@@ -29,7 +29,6 @@ public class Rocket : MonoBehaviour {
 
 	void OnTriggerEnter (Collider collider)
 	{
-		print ("Rocket Hit");
 		if (collider.GetComponent<BadGuysController> ()) {
 			collider.GetComponent<BadGuysController>().takeDamage(damage);
 		}

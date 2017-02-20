@@ -5,22 +5,15 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
 
-	public float gameSpeed = 0.1f;
-
 	[SerializeField] private Text ammoText =null, shieldText=null, fuelText=null, rocketsText=null ;
+	private StargooseController stargoose;
 
-	//TODO Check here for opt
-	public StargooseController stargoose;
-
-	// Use this for initialization
-	void Start () {
-		
+	void Start(){
+		stargoose = GameObject.FindObjectOfType<StargooseController> ();
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
-		transform.position = transform.position + Vector3.forward * gameSpeed * Time.deltaTime;
-
 		updateUI();
 	}
 

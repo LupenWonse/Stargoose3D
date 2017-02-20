@@ -13,6 +13,7 @@ public class StargooseController : MonoBehaviour {
 	// Gameplay variables
 	[SerializeField] private float forwardSpeed = 0.5f;
 	[SerializeField] private float horizontalSpeed = 0.5f;
+	[SerializeField] private float constantSpeed = 1.0f;
 	[SerializeField] private float fireDelay = 0.1f;
 	[SerializeField] private float refireTime = 0.1f;
 	[SerializeField] private Vector3 firingVelocity = new Vector3(0f,0f,50f);
@@ -28,7 +29,7 @@ public class StargooseController : MonoBehaviour {
 	[SerializeField] private float tunnelReverseSpeed = 5.0f;
 	[SerializeField] private float tunnelForwardSpeed = 15.0f;
 	private float gravity = 9.81f;
-	private Transform currentTunnel;
+	private Transform currentTunnel = null;
 
 	[Header ("Connections")]
 	// Rocket prefab
@@ -43,7 +44,6 @@ public class StargooseController : MonoBehaviour {
 	public LayerMask floorMask;
 
 	// Machine Guns
-	[SerializeField] private MachineGunBullet bullet = null;
 	[SerializeField] private Transform machineGunLeftNozzle = null;
 	[SerializeField] private Transform machineGunRightNozzle = null;
 
@@ -58,7 +58,8 @@ public class StargooseController : MonoBehaviour {
 	private float forwardDistanceAllowed = 25.0f;
 	// Internal connections that will be setup during Start
 	private AmmoHolder ammoHolder;
-	private GameController gameField;
+	// private GameController gameField;
+	private float currentForwardLocation;
 	// Internal holder variables for optimization purposes
 	private new Rigidbody rigidbody;
 
@@ -70,9 +71,8 @@ public class StargooseController : MonoBehaviour {
 			Debug.LogError ("No Ammo Holder found on the player ship!");
 		}
 
-		if (GameObject.FindObjectOfType<GameController> ()) {
-			gameField = GameObject.FindObjectOfType<GameController> ();
-		}
+		// Store initial location
+		currentForwardLocation = transform.position.z;
 			
 	}
 
@@ -99,8 +99,10 @@ public class StargooseController : MonoBehaviour {
 	}
 
 	private void onPlanetMovement(){
-		transform.position = transform.position + horizontalThrust * horizontalSpeed * Time.deltaTime * Vector3.right + forwardThrust*forwardSpeed*Time.deltaTime*Vector3.forward;
-		transform.position = new Vector3(transform.position.x,transform.position.y,Mathf.Clamp(transform.position.z,gameField.transform.position.z - forwardDistanceAllowed, gameField.transform.position.z + forwardDistanceAllowed));
+		currentForwardLocation += constantSpeed * Time.deltaTime;
+
+		transform.position = transform.position + horizontalThrust * horizontalSpeed * Time.deltaTime * Vector3.right + ((forwardThrust*forwardSpeed)+constantSpeed)*Time.deltaTime*Vector3.forward;
+		transform.position = new Vector3(transform.position.x,transform.position.y,Mathf.Clamp(transform.position.z,currentForwardLocation - forwardDistanceAllowed, currentForwardLocation + forwardDistanceAllowed));
 
 		//GetComponent<Rigidbody> ().MovePosition (transform.position + Vector3.forward);
 		Ray frontLeftRay= new Ray(frontLeftPad.position,Vector3.down);
@@ -120,10 +122,6 @@ public class StargooseController : MonoBehaviour {
 
 
 		float height = (frontLeftRaycastResult.point.y + rearLeftRaycastResult.point.y + frontRightRaycastResult.point.y + rearRightRaycastResult.point.y)/4.0f + .1f;
-		//height = Mathf.Max(new float[] {frontLeftRaycastResult.point.y,rearLeftRaycastResult.point.y,frontRightRaycastResult.point.y,rearRightRaycastResult.point.y});
-
-
-		//float pitch = Mathf.Atan((frontRaycastResult.point.y - backRaycastResult.point.y) / (front.position.z - back.position.z));
 
 		float pitch =  Mathf.Atan2((frontLeftRaycastResult.point.y - rearLeftRaycastResult.point.y), (frontLeftPad.position.z - rearLeftPad.position.z)) * Mathf.Rad2Deg;
 		float roll1 = Mathf.Atan2((frontLeftRaycastResult.point.y - frontRightRaycastResult.point.y), (frontRightPad.position.x - frontLeftPad.position.x)) * Mathf.Rad2Deg;
@@ -142,7 +140,6 @@ public class StargooseController : MonoBehaviour {
 		}
 
 		if (Input.GetButtonDown("ReloadLeft")) {
-			print(leftRocket);
 			if (leftRocket == null) {
 				reloadLeftRocket ();
 			} else {
@@ -157,6 +154,10 @@ public class StargooseController : MonoBehaviour {
 				fireRightRocket ();
 			}
 		}
+	}
+
+	public float getCurrentForwardLocation(){
+		return currentForwardLocation;
 	}
 
 	// Damage functions
@@ -250,7 +251,6 @@ public class StargooseController : MonoBehaviour {
 		} else {
 			speed = tunnelConstantForwardSpeed + forwardThrust * tunnelReverseSpeed;
 		}
-		print (speed);
 
 		transform.position += Vector3.forward * speed * Time.deltaTime;
 	}
