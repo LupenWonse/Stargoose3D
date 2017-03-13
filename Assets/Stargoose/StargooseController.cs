@@ -29,7 +29,7 @@ public class StargooseController : MonoBehaviour {
 	[SerializeField] private float tunnelReverseSpeed = 5.0f;
 	[SerializeField] private float tunnelForwardSpeed = 15.0f;
 	private float gravity = 9.81f;
-	private Transform currentTunnel = null;
+	[SerializeField] private Transform currentTunnel = null;
 
 	[Header ("Connections")]
 	// Rocket prefab
@@ -253,5 +253,12 @@ public class StargooseController : MonoBehaviour {
 		}
 
 		transform.position += Vector3.forward * speed * Time.deltaTime;
+	}
+
+	public void OnTriggerEnter(Collider collider){
+		if (collider.gameObject.tag == "Tunnel"){
+			isInTunnel = true;
+			currentTunnel = collider.transform;
+		}
 	}
 }
