@@ -73,6 +73,9 @@ public class StargooseController : MonoBehaviour {
 
 		// Store initial location
 		currentForwardLocation = transform.position.z;
+
+		// Setup rigidbody
+		rigidbody = GetComponent<Rigidbody>();
 			
 	}
 
@@ -256,9 +259,25 @@ public class StargooseController : MonoBehaviour {
 	}
 
 	public void OnTriggerEnter(Collider collider){
-		if (collider.gameObject.tag == "Tunnel"){
-			isInTunnel = true;
-			currentTunnel = collider.transform;
-		}
+		if (collider.gameObject.tag == "Tunnel")
+        {
+			EnterTunnel(collider.gameObject.transform);
+        }
+    }
+
+    private void EnterTunnel(Transform tunnel)
+    {
+        isInTunnel = true;
+        currentTunnel = tunnel;
+
+		moveToXPosition(tunnel.position.x);
+    }
+
+    void moveToXPosition(float newX){
+		Vector3 newPosition = transform.position;
+		newPosition.x = newX;
+		rigidbody.MovePosition(newPosition);
+		transform.position = newPosition;
 	}
+
 }
