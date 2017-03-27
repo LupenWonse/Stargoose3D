@@ -61,6 +61,13 @@ public class StargooseController : MonoBehaviour {
 	// private GameController gameField;
 	private float currentForwardLocation;
 	// Internal holder variables for optimization purposes
+
+	// Locking of the player input for placement in the tunnels & entrances
+	private Vector3 targetPosition, lockedVelocity;
+	private bool playerControlLocked = false;
+
+
+
 	private new Rigidbody rigidbody;
 
 	// Use this for initialization
@@ -91,9 +98,13 @@ public class StargooseController : MonoBehaviour {
 		horizontalThrust  = Input.GetAxis ("Horizontal");
 		forwardThrust  = Input.GetAxis ("Vertical");
 
-
-
-		if (isInTunnel) {
+		// Three modes of Movement
+		// 1) Locked -> Controlled by script
+		// 2) InTunnel -> Move around the axis of the tunnel
+		// 3) OnPlanet -> Move on the planet surface
+		if (playerControlLocked){
+			lockedMovement();
+		} else if (isInTunnel) {
 			inTunnelMovement ();
 		} else {
 			onPlanetMovement ();
@@ -274,10 +285,25 @@ public class StargooseController : MonoBehaviour {
     }
 
     void moveToXPosition(float newX){
+		// Ignore the player input until we reach destination
+		playerControlLocked = true;
+		
+		// Set target position
 		Vector3 newPosition = transform.position;
 		newPosition.x = newX;
-		rigidbody.MovePosition(newPosition);
-		transform.position = newPosition;
+		targetPosition = newPosition;
+		lockedVelocity = Vector3.zero;
+	}
+
+	void lockedMovement(){
+		// When input is locked we drive our own Movement
+		rigidbody.MovePosition(Vector3.SmoothDamp(transform.position, targetPosition, ref lockedVelocity, 0.5f));
+		print(lockedVelocity);
+		// When we reach destination release the control
+		if ((transform.position - targetPosition).magnitude < 0.01f){
+			transform.position = targetPosition;
+			playerControlLocked = false;
+		}
 	}
 
 }
