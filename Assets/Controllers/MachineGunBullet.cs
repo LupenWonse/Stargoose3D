@@ -6,6 +6,7 @@ using UnityEngine;
 public class MachineGunBullet : MonoBehaviour {
 
 	[SerializeField] private int bulletDamage = 10;
+	public AmmoType type; 
 
 	// Use this for initialization
 	void Awake () {

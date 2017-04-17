@@ -18,17 +18,12 @@ public class AmmoHolder : MonoBehaviour {
 
 	public static AmmoHolder holder = null;
 
-
-
-	private Stack<MachineGunBullet> bullets = new Stack<MachineGunBullet>();
-
 	private Stack<MachineGunBullet> playerMachineGunBullets = new Stack<MachineGunBullet>();
 	private Stack<MachineGunBullet> enemnyMachineGunBullets = new Stack<MachineGunBullet>();
 	private Stack<MachineGunBullet> enemyMortarBullets = new Stack<MachineGunBullet>();
 
 
 	public int ammoLeft = 100;
-	public MachineGunBullet machineGunBullet;
 
 	void Awake() {
 		if (holder == null) {
@@ -56,12 +51,6 @@ public class AmmoHolder : MonoBehaviour {
 		}
 
 	}
-		
-	// UNUSED
-	void addAmmoToStack(){
-		MachineGunBullet bullet = GameObject.Instantiate (machineGunBullet,transform);
-		bullets.Push (bullet);
-	}
 
 	public MachineGunBullet giveBullet(AmmoType ammoType){
 		MachineGunBullet newBullet = null;
@@ -86,8 +75,17 @@ public class AmmoHolder : MonoBehaviour {
 		// Disable the bullet
 		bullet.gameObject.SetActive (false);
 
-		// Push it onto our stack
-		bullets.Push (bullet);
+		switch (bullet.type) {
+		case AmmoType.playerMachineGun:
+			playerMachineGunBullets.Push(bullet);
+			break;
+		case AmmoType.enemyMachineGun:
+			enemnyMachineGunBullets.Push(bullet);
+			break;
+		case AmmoType.enemyMortar:
+			enemyMortarBullets.Push(bullet);
+			break;
+		}
 
 		// Set it as our child so it is removed from the scene hierarchy
 		// This is only organizationin in Unity
