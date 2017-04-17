@@ -9,10 +9,12 @@ public class Collectible : MonoBehaviour {
 
 	public void OnTriggerEnter(Collider collider){
 		// If we hit the player
+		if (collider.CompareTag("Player")){
+			// Player collects the item
+			GameController.controller.collect(this);
+			// Destroy the collectible object
+			Destroy(gameObject);
+		}
 
-		// Player collects the item
-		GameController.controller.collect(this);
-		// Destroy the collectible object
-		Destroy(gameObject);
 	}
 }
