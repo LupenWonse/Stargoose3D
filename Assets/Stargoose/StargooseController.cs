@@ -103,11 +103,14 @@ public class StargooseController : MonoBehaviour {
 		// 2) InTunnel -> Move around the axis of the tunnel
 		// 3) OnPlanet -> Move on the planet surface
 		if (playerControlLocked){
+			print("Locked Movement");
 			lockedMovement();
 		} else if (isInTunnel) {
 			inTunnelMovement ();
+			print("Tunnel Movement");
 		} else {
 			onPlanetMovement ();
+			print("Free Movement");
 		}
 
 	}
@@ -276,6 +279,13 @@ public class StargooseController : MonoBehaviour {
         }
     }
 
+	public void OnTriggerExit(Collider collider){
+		if (collider.gameObject.tag == "Tunnel")
+        {
+			ExitTunnel();
+        }
+	}
+
     private void EnterTunnel(Transform tunnel)
     {
         isInTunnel = true;
@@ -283,6 +293,14 @@ public class StargooseController : MonoBehaviour {
 
 		moveToXPosition(tunnel.position.x);
     }
+
+	private void ExitTunnel(){
+		isInTunnel = false;
+		currentTunnel = null;
+
+		// Restore the forward location
+		currentForwardLocation = transform.position.z;
+	}
 
     void moveToXPosition(float newX){
 		// Ignore the player input until we reach destination
