@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
 
+	public LevelExit exit = null;
+	private int gemsCollected = 0;
 	static public GameController controller;
 	[SerializeField] private Text ammoText =null, shieldText=null, fuelText=null, rocketsText=null ;
 	private StargooseController stargoose;
@@ -18,6 +20,8 @@ public class GameController : MonoBehaviour {
 		}
 		// Find player
 		stargoose = GameObject.FindObjectOfType<StargooseController> ();
+
+		exit.enabled = false;
 	}
 
 	// Update is called once per frame
@@ -41,7 +45,37 @@ public class GameController : MonoBehaviour {
 				break;
 			case Collectible.COLLECTIBLE.GEM1:
 				print ("GEM1 collected");
+				gemsCollected++;
+				break;
+			case Collectible.COLLECTIBLE.GEM2:
+				print ("GEM2 collected");
+				gemsCollected++;
+				break;
+			case Collectible.COLLECTIBLE.GEM3:
+				print ("GEM3 collected");
+				gemsCollected++;
+				break;
+			case Collectible.COLLECTIBLE.GEM4:
+				print ("GEM4 collected");
+				gemsCollected++;
+				break;
+			case Collectible.COLLECTIBLE.GEM5:
+				print ("GEM5 collected");
+				gemsCollected++;
+				break;
+			case Collectible.COLLECTIBLE.GEM6:
+				print ("GEM6 collected");
+				gemsCollected++;
 				break;
 		}
+
+		if (gemsCollected >= 6){
+			enableExit();
+		}
+
+	}
+
+	public void enableExit(){
+		exit.enabled = true;
 	}
 }

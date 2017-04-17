@@ -9,7 +9,6 @@ public class LevelRepeater : MonoBehaviour {
 	// Use this for initialization
 
 	public void OnTriggerExit(Collider collider){
-		print("Hit");
 		collider.gameObject.transform.position += Vector3.forward * levelLength;
 	}
 }
