@@ -20,7 +20,7 @@ public class BadGuysController : MonoBehaviour {
 	public Transform turretHead;
 	public Transform turretNozzle;
 
-	// Internal variabls
+	// Internal variables
 	private bool isEnemyInRange = true;
 	private float firingTime = 0.0f;
 
