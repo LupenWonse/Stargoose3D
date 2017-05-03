@@ -7,7 +7,6 @@ public class StargooseController : MonoBehaviour {
 	[Header ("Initialization")]
 	public int rockets = 6;
 	public int fuel = 100, shield = 100, ammo = 100;
-	public float pushForce = 1000.0f;
 
 	[Header ("Gameplay - Planet")]
 	// Gameplay variables
@@ -138,7 +137,7 @@ public class StargooseController : MonoBehaviour {
 		Physics.Raycast (rearRightRay, out rearRightRaycastResult, 15, floorMask);
 
 
-		float height = (frontLeftRaycastResult.point.y + rearLeftRaycastResult.point.y + frontRightRaycastResult.point.y + rearRightRaycastResult.point.y)/4.0f + .1f;
+		float height = (frontLeftRaycastResult.point.y + rearLeftRaycastResult.point.y + frontRightRaycastResult.point.y + rearRightRaycastResult.point.y)/4.0f + .5f;
 
 		float pitch =  Mathf.Atan2((frontLeftRaycastResult.point.y - rearLeftRaycastResult.point.y), (frontLeftPad.position.z - rearLeftPad.position.z)) * Mathf.Rad2Deg;
 		float roll1 = Mathf.Atan2((frontLeftRaycastResult.point.y - frontRightRaycastResult.point.y), (frontRightPad.position.x - frontLeftPad.position.x)) * Mathf.Rad2Deg;

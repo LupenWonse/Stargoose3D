@@ -9,6 +9,11 @@ public class LevelRepeater : MonoBehaviour {
 	// Use this for initialization
 
 	public void OnTriggerExit(Collider collider){
-		collider.gameObject.transform.position += Vector3.forward * levelLength;
+		if (collider.GetComponent<Terrain>() == null){
+			collider.gameObject.transform.position += Vector3.forward * levelLength;
+		} else {
+			collider.gameObject.transform.position += Vector3.forward * collider.gameObject.GetComponent<Terrain>().terrainData.size.z*2;
+		}
+		
 	}
 }
