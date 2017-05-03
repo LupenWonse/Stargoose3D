@@ -20,13 +20,13 @@ public class GameController : MonoBehaviour {
 		}
 		// Find player
 		stargoose = GameObject.FindObjectOfType<StargooseController> ();
-
+		transform.position = new Vector3(transform.position.z, transform.position.y, stargoose.transform.position.z);
 		exit.enabled = false;
 	}
 
 	// Update is called once per frame
 	void Update () {
-		transform.position = new Vector3(transform.position.x, transform.position.y, stargoose.transform.position.z);
+		transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z + stargoose.constantSpeed * Time.deltaTime);
 		updateUI();
 	}
 

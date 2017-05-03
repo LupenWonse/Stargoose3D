@@ -12,10 +12,11 @@ public class StargooseController : MonoBehaviour {
 	// Gameplay variables
 	[SerializeField] private float forwardSpeed = 0.5f;
 	[SerializeField] private float horizontalSpeed = 0.5f;
-	[SerializeField] private float constantSpeed = 1.0f;
+	[SerializeField] public float constantSpeed = 1.0f;
 	[SerializeField] private float fireDelay = 0.1f;
 	[SerializeField] private float refireTime = 0.1f;
 	[SerializeField] private Vector3 firingVelocity = new Vector3(0f,0f,50f);
+	[SerializeField] private float horizontalDistanceAllowed = 33.0f;
 
 
 	[Header ("Gameplay - Tunnel")]
@@ -85,40 +86,56 @@ public class StargooseController : MonoBehaviour {
 			
 	}
 
-	void FixedUpdate () {
-		
-	}
-
 	private float height;
 
 	void Update ()
 	{
-		// Movement handling
+		// Input handling
 		horizontalThrust  = Input.GetAxis ("Horizontal");
-		forwardThrust  = Input.GetAxis ("Vertical");
+		forwardThrust = Input.GetAxis("Vertical");
+
+		// Input clamping
+		if (transform.position.x > horizontalDistanceAllowed){
+			horizontalThrust = Mathf.Min(horizontalThrust,0);
+		} else if (transform.position.x < - horizontalDistanceAllowed){
+			horizontalThrust = Mathf.Max(horizontalThrust,0);
+		}
+
+		print(forwardThrust);
+		if (transform.position.z - GameController.controller.transform.position.z > forwardDistanceAllowed){
+			forwardThrust = Mathf.Min(forwardThrust,0);
+		} else if (transform.position.z - GameController.controller.transform.position.z < -forwardDistanceAllowed) {
+			forwardThrust = Mathf.Max(forwardThrust,0);
+		}
+
+		
 
 		// Three modes of Movement
 		// 1) Locked -> Controlled by script
 		// 2) InTunnel -> Move around the axis of the tunnel
 		// 3) OnPlanet -> Move on the planet surface
 		if (playerControlLocked){
-			print("Locked Movement");
 			lockedMovement();
 		} else if (isInTunnel) {
 			inTunnelMovement ();
-			print("Tunnel Movement");
 		} else {
 			onPlanetMovement ();
-			print("Free Movement");
 		}
 
 	}
 
 	private void onPlanetMovement(){
+		float forwardMotion = constantSpeed + (forwardThrust * forwardSpeed);
+		float horizontalMotion = horizontalThrust * horizontalSpeed;
+
+
 		currentForwardLocation += constantSpeed * Time.deltaTime;
 
-		transform.position = transform.position + horizontalThrust * horizontalSpeed * Time.deltaTime * Vector3.right + ((forwardThrust*forwardSpeed)+constantSpeed)*Time.deltaTime*Vector3.forward;
-		transform.position = new Vector3(transform.position.x,transform.position.y,Mathf.Clamp(transform.position.z,currentForwardLocation - forwardDistanceAllowed, currentForwardLocation + forwardDistanceAllowed));
+		CharacterController cc = GetComponent<CharacterController>();
+
+		//Vector3 newPosition = transform.position + horizontalThrust * horizontalSpeed * Time.deltaTime * Vector3.right + ((forwardThrust*forwardSpeed)+constantSpeed)*Time.deltaTime*Vector3.forward;
+		//newPosition = new Vector3(transform.position.x,transform.position.y,Mathf.Clamp(transform.position.z,currentForwardLocation - forwardDistanceAllowed, currentForwardLocation + forwardDistanceAllowed));
+		cc.SimpleMove(forwardMotion * Vector3.forward + horizontalMotion * Vector3.right);
 
 		//GetComponent<Rigidbody> ().MovePosition (transform.position + Vector3.forward);
 		Ray frontLeftRay= new Ray(frontLeftPad.position,Vector3.down);
@@ -131,13 +148,14 @@ public class StargooseController : MonoBehaviour {
 		RaycastHit rearLeftRaycastResult = new RaycastHit ();
 		RaycastHit rearRightRaycastResult = new RaycastHit ();
 
-		Physics.Raycast (rearLeftRay, out rearLeftRaycastResult, 15, floorMask);
-		Physics.Raycast (frontLeftRay, out frontLeftRaycastResult, 15, floorMask);
-		Physics.Raycast (frontRightRay, out frontRightRaycastResult, 15, floorMask);
-		Physics.Raycast (rearRightRay, out rearRightRaycastResult, 15, floorMask);
-
-
-		float height = (frontLeftRaycastResult.point.y + rearLeftRaycastResult.point.y + frontRightRaycastResult.point.y + rearRightRaycastResult.point.y)/4.0f + .5f;
+if(
+		Physics.Raycast (rearLeftRay, out rearLeftRaycastResult, 15, floorMask) |
+		Physics.Raycast (frontLeftRay, out frontLeftRaycastResult, 15, floorMask) | 
+		Physics.Raycast (frontRightRay, out frontRightRaycastResult, 15, floorMask) |
+		Physics.Raycast (rearRightRay, out rearRightRaycastResult, 15, floorMask)
+)
+ {
+	float height = (frontLeftRaycastResult.point.y + rearLeftRaycastResult.point.y + frontRightRaycastResult.point.y + rearRightRaycastResult.point.y)/4.0f + .5f;
 
 		float pitch =  Mathf.Atan2((frontLeftRaycastResult.point.y - rearLeftRaycastResult.point.y), (frontLeftPad.position.z - rearLeftPad.position.z)) * Mathf.Rad2Deg;
 		float roll1 = Mathf.Atan2((frontLeftRaycastResult.point.y - frontRightRaycastResult.point.y), (frontRightPad.position.x - frontLeftPad.position.x)) * Mathf.Rad2Deg;
@@ -146,7 +164,13 @@ public class StargooseController : MonoBehaviour {
 		float roll = Mathf.Min (roll1, roll2);
 
 		transform.rotation = Quaternion.Euler (-pitch, 0, -roll);
-		transform.position = new Vector3(transform.position.x,height,transform.position.z);
+		//transform.position = new Vector3(transform.position.x,height,transform.position.z);
+} else {
+	Debug.LogWarning("No raycast found ground");
+}
+
+
+		
 
 
 		// INPUT HANDLING
