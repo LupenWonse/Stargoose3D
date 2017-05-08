@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 11bbd4b12d261d34c990cfb634459c7a
+timeCreated: 1494252806
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Airstrike Gradient
+  fontNames:
+  - Airstrike Gradient
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
