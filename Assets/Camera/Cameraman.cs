@@ -66,9 +66,9 @@ public class Cameraman : MonoBehaviour {
 			targetCameraLookAt.x = Mathf.Clamp (hitObject.point.x, -5, 5);
 		}
 
-		cameraElevation = (stargoose.transform.position.z - transform.position.z) / 3;
+		cameraElevation = stargoose.transform.position.y + 10.0f + stargoose.getCurrentForwardLocation()/5;
 		cameraSlide =  stargoose.transform.position.x;
-		cameraDistance = stargoose.transform.position.z + stargoose.getCurrentForwardLocation() - 40.0f;
+		cameraDistance = stargoose.transform.position.z - stargoose.getCurrentForwardLocation() - 40.0f;
 
 		targetCameraPosition = new Vector3 (cameraSlide, cameraElevation, cameraDistance);
     }
