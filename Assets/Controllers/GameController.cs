@@ -32,8 +32,8 @@ public class GameController : MonoBehaviour {
 
 	void updateUI ()
 	{
-		ammoText.text = "Ammo: " + stargoose.ammo.ToString ();
-		fuelText.text = "Fuel: " + stargoose.fuel.ToString ();
+		ammoText.text = "Ammo: " + stargoose.ammo.ToString();
+		fuelText.text = "Fuel: " + stargoose.fuel.ToString("###");
 		shieldText.text = "Shield: " + stargoose.shield.ToString();
 		rocketsText.text = "Rockets: " + stargoose.rockets.ToString();
 	}
@@ -44,6 +44,12 @@ public class GameController : MonoBehaviour {
 				stargoose.ammo += 10;
 				if(stargoose.ammo > 100){
 					stargoose.ammo = 100;
+				}
+				break;
+			case Collectible.COLLECTIBLE.FUEL:
+				stargoose.fuel += 10;
+				if(stargoose.fuel > 100){
+					stargoose.fuel = 100;
 				}
 				break;
 			case Collectible.COLLECTIBLE.GEM1:

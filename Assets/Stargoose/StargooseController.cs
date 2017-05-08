@@ -6,7 +6,8 @@ public class StargooseController : MonoBehaviour {
 
 	[Header ("Initialization")]
 	public int rockets = 6;
-	public int fuel = 100, shield = 100, ammo = 100;
+	public int shield = 100, ammo = 100;
+	public float fuel = 100;
 
 	[Header ("Gameplay - Planet")]
 	// Gameplay variables
@@ -106,6 +107,9 @@ public class StargooseController : MonoBehaviour {
 		} else if (currentForwardLocation < - forwardDistanceAllowed) {
 			forwardThrust = Mathf.Max(forwardThrust,0);
 		}
+
+		// Consume fuel
+		fuel -= (Mathf.Abs(horizontalThrust) + Mathf.Abs(forwardThrust))/80.0f;
 
 		
 
