@@ -79,7 +79,7 @@ public class StargooseController : MonoBehaviour {
 		}
 
 		// Store initial location
-		currentForwardLocation = transform.position.z;
+		currentForwardLocation = 0;
 
 		// Setup rigidbody
 		rigidbody = GetComponent<Rigidbody>();
@@ -101,10 +101,9 @@ public class StargooseController : MonoBehaviour {
 			horizontalThrust = Mathf.Max(horizontalThrust,0);
 		}
 
-		print(forwardThrust);
-		if (transform.position.z - GameController.controller.transform.position.z > forwardDistanceAllowed){
+		if (currentForwardLocation > forwardDistanceAllowed){
 			forwardThrust = Mathf.Min(forwardThrust,0);
-		} else if (transform.position.z - GameController.controller.transform.position.z < -forwardDistanceAllowed) {
+		} else if (currentForwardLocation < - forwardDistanceAllowed) {
 			forwardThrust = Mathf.Max(forwardThrust,0);
 		}
 
@@ -127,9 +126,9 @@ public class StargooseController : MonoBehaviour {
 	private void onPlanetMovement(){
 		float forwardMotion = constantSpeed + (forwardThrust * forwardSpeed);
 		float horizontalMotion = horizontalThrust * horizontalSpeed;
+		print(forwardMotion);
 
-
-		currentForwardLocation += constantSpeed * Time.deltaTime;
+		currentForwardLocation += forwardThrust * forwardSpeed * Time.deltaTime;
 
 		CharacterController cc = GetComponent<CharacterController>();
 
@@ -338,7 +337,7 @@ if(
 
 	void lockedMovement(){
 		// When input is locked we drive our own Movement
-		rigidbody.MovePosition(Vector3.SmoothDamp(transform.position, targetPosition, ref lockedVelocity, 0.5f));
+		//rigidbody.MovePosition(Vector3.SmoothDamp(transform.position, targetPosition, ref lockedVelocity, 0.5f));
 		print(lockedVelocity);
 		// When we reach destination release the control
 		if ((transform.position - targetPosition).magnitude < 0.01f){

@@ -68,7 +68,7 @@ public class Cameraman : MonoBehaviour {
 
 		cameraElevation = (stargoose.transform.position.z - transform.position.z) / 3;
 		cameraSlide =  stargoose.transform.position.x;
-		cameraDistance = stargoose.getCurrentForwardLocation() - 40.0f;
+		cameraDistance = stargoose.transform.position.z + stargoose.getCurrentForwardLocation() - 40.0f;
 
 		targetCameraPosition = new Vector3 (cameraSlide, cameraElevation, cameraDistance);
     }
