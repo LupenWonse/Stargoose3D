@@ -58,6 +58,9 @@ public class GameController : MonoBehaviour {
 					stargoose.shield = 100;
 				}
 				break;
+			case Collectible.COLLECTIBLE.ROCKETS:
+				stargoose.rockets = 6;
+				break;
 			case Collectible.COLLECTIBLE.GEM1:
 				print ("GEM1 collected");
 				gemsCollected++;
