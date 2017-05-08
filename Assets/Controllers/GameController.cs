@@ -52,6 +52,12 @@ public class GameController : MonoBehaviour {
 					stargoose.fuel = 100;
 				}
 				break;
+			case Collectible.COLLECTIBLE.SHIELD:
+				stargoose.shield += 10;
+				if(stargoose.shield > 100){
+					stargoose.shield = 100;
+				}
+				break;
 			case Collectible.COLLECTIBLE.GEM1:
 				print ("GEM1 collected");
 				gemsCollected++;
