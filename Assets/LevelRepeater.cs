@@ -13,6 +13,8 @@ public class LevelRepeater : MonoBehaviour {
 			collider.gameObject.transform.position += Vector3.forward * collider.gameObject.GetComponent<Terrain>().terrainData.size.z*2;
 		} else if (collider.GetComponent<MachineGunBullet>()){
 			Destroy(collider.gameObject);
+		} else if(collider.gameObject.tag == "DoNotRepeat"){
+			// Do nothing
 		} else {
 			collider.gameObject.transform.position += Vector3.forward * levelLength;
 			collider.gameObject.SetActive(true);
