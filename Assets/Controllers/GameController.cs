@@ -42,6 +42,9 @@ public class GameController : MonoBehaviour {
 		switch (item.type) {
 			case Collectible.COLLECTIBLE.AMMO:
 				stargoose.ammo += 10;
+				if(stargoose.ammo > 100){
+					stargoose.ammo = 100;
+				}
 				break;
 			case Collectible.COLLECTIBLE.GEM1:
 				print ("GEM1 collected");
