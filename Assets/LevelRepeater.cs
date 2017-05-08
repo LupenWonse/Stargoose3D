@@ -9,10 +9,13 @@ public class LevelRepeater : MonoBehaviour {
 	// Use this for initialization
 
 	public void OnTriggerExit(Collider collider){
-		if (collider.GetComponent<Terrain>() == null){
-			collider.gameObject.transform.position += Vector3.forward * levelLength;
-		} else {
+		if (collider.GetComponent<Terrain>()){
 			collider.gameObject.transform.position += Vector3.forward * collider.gameObject.GetComponent<Terrain>().terrainData.size.z*2;
+		} else if (collider.GetComponent<MachineGunBullet>()){
+			Destroy(collider.gameObject);
+		} else {
+			collider.gameObject.transform.position += Vector3.forward * levelLength;
+			collider.gameObject.SetActive(true);
 		}
 		
 	}

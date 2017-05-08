@@ -13,7 +13,7 @@ public class Collectible : MonoBehaviour {
 			// Player collects the item
 			GameController.controller.collect(this);
 			// Destroy the collectible object
-			Destroy(gameObject);
+			gameObject.SetActive(false);
 		}
 
 	}
