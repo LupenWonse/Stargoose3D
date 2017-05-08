@@ -321,7 +321,7 @@ if(
 		currentTunnel = null;
 
 		// Restore the forward location
-		currentForwardLocation = transform.position.z;
+		//currentForwardLocation = transform.position.z;
 	}
 
     void moveToXPosition(float newX){
@@ -337,8 +337,7 @@ if(
 
 	void lockedMovement(){
 		// When input is locked we drive our own Movement
-		//rigidbody.MovePosition(Vector3.SmoothDamp(transform.position, targetPosition, ref lockedVelocity, 0.5f));
-		print(lockedVelocity);
+		rigidbody.MovePosition(Vector3.SmoothDamp(transform.position, targetPosition, ref lockedVelocity, 0.5f));
 		// When we reach destination release the control
 		if ((transform.position - targetPosition).magnitude < 0.01f){
 			transform.position = targetPosition;
