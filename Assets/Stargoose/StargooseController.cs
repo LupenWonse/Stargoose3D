@@ -320,7 +320,7 @@ if(
         currentTunnel = tunnel;
 
 		transform.position = new Vector3(transform.position.x, tunnel.transform.position.y-5.5f, transform.position.z);
-		transform.rotation = Quaternion.identity;
+		spaceshipBody.rotation = Quaternion.identity;
 
 		moveToXPosition(tunnel.position.x);
     }
