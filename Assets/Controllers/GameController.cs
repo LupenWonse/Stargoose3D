@@ -8,7 +8,9 @@ public class GameController : MonoBehaviour {
 	public LevelExit exit = null;
 	private int gemsCollected = 0;
 	static public GameController controller;
-	[SerializeField] private Text ammoText =null, shieldText=null, fuelText=null, rocketsText=null, gemsText ;
+	[SerializeField] private Text ammoText, shieldText, fuelText, rocketsText, gemsText, pauseMenuMessage ;
+	[SerializeField] private Canvas pauseMenu;
+	[SerializeField] private Button resumeButton;
 	private StargooseController stargoose;
 
 	void Start(){
@@ -22,12 +24,23 @@ public class GameController : MonoBehaviour {
 		stargoose = GameObject.FindObjectOfType<StargooseController> ();
 		transform.position = new Vector3(transform.position.z, transform.position.y, stargoose.transform.position.z);
 		exit.enabled = false;
+
+		// Hide pause menu
+		pauseMenu.gameObject.SetActive(false);
+
+		// Reset Time scale
+		Time.timeScale = 1;
 	}
 
 	// Update is called once per frame
 	void Update () {
 		transform.position = new Vector3(transform.position.x, transform.position.y, stargoose.transform.position.z);
 		updateUI();
+
+		// Pause handling
+		if (Input.GetButton("Pause")){
+			pauseGame();
+		}
 	}
 
 	void updateUI ()
@@ -96,5 +109,33 @@ public class GameController : MonoBehaviour {
 
 	public void enableExit(){
 		exit.enabled = true;
+	}
+
+	public void pauseGame(){
+		Time.timeScale = 0;
+		pauseMenuMessage.text = "Game Paused";
+		resumeButton.enabled = true;
+		pauseMenu.gameObject.SetActive(true);
+	}
+
+	public void resumeGame(){
+		Time.timeScale = 1;
+		pauseMenu.gameObject.SetActive(false);
+	}
+
+	public void restartGame(){
+		UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+	}
+
+	public void endGame(){
+		pauseMenuMessage.text = "Game Over";
+		resumeButton.enabled = false;
+		pauseMenu.gameObject.SetActive(true);
+	}
+
+	public void winGame(){
+		pauseMenuMessage.text = "You Win";
+		resumeButton.enabled = false;
+		pauseMenu.gameObject.SetActive(true);
 	}
 }

@@ -112,6 +112,11 @@ public class StargooseController : MonoBehaviour {
 		// Consume fuel
 		fuel -= (Mathf.Abs(horizontalThrust) + Mathf.Abs(forwardThrust))/80.0f;
 
+
+		// Death conditions
+		if (fuel < 0 || shield < 0){
+			die();
+		}
 		
 
 		// Three modes of Movement
@@ -352,6 +357,16 @@ if(
 			transform.position = targetPosition;
 			playerControlLocked = false;
 		}
+	}
+
+	private void die(){
+		// Hide body
+		spaceshipBody.gameObject.SetActive(false);
+		// Play a particle system
+
+		// Tell controller the game is over
+		GameController.controller.endGame();
+
 	}
 
 }
