@@ -18,6 +18,7 @@ public class StargooseController : MonoBehaviour {
 	[SerializeField] private float refireTime = 0.1f;
 	[SerializeField] private Vector3 firingVelocity = new Vector3(0f,0f,50f);
 	[SerializeField] private float horizontalDistanceAllowed = 33.0f;
+	[SerializeField] private Transform spaceshipBody;
 
 
 	[Header ("Gameplay - Tunnel")]
@@ -161,12 +162,13 @@ if(
 	float height = (frontLeftRaycastResult.point.y + rearLeftRaycastResult.point.y + frontRightRaycastResult.point.y + rearRightRaycastResult.point.y)/4.0f + .5f;
 
 		float pitch =  Mathf.Atan2((frontLeftRaycastResult.point.y - rearLeftRaycastResult.point.y), (frontLeftPad.position.z - rearLeftPad.position.z)) * Mathf.Rad2Deg;
-		float roll1 = Mathf.Atan2((frontLeftRaycastResult.point.y - frontRightRaycastResult.point.y), (frontRightPad.position.x - frontLeftPad.position.x)) * Mathf.Rad2Deg;
-		float roll2 = Mathf.Atan2((rearLeftRaycastResult.point.y - rearRightRaycastResult.point.y), (rearRightPad.position.x - rearLeftPad.position.x)) * Mathf.Rad2Deg;
-
+		float roll1 = Mathf.Atan2((frontLeftRaycastResult.point.y - frontRightRaycastResult.point.y), 3.5f) * Mathf.Rad2Deg;
+		float roll2 = Mathf.Atan2((rearLeftRaycastResult.point.y - rearRightRaycastResult.point.y), (3.5f)) * Mathf.Rad2Deg;
+		//print((rearRightPad.position.x - rearLeftPad.position.x));
 		float roll = Mathf.Min (roll1, roll2);
+		//float roll = roll2;
 
-		transform.rotation = Quaternion.Euler (-pitch, 0, -roll);
+		spaceshipBody.rotation = Quaternion.Euler (-pitch, 0, -roll);
 		//transform.position = new Vector3(transform.position.x,height,transform.position.z);
 } else {
 	Debug.LogWarning("No raycast found ground");
