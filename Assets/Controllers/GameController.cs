@@ -26,10 +26,11 @@ public class GameController : MonoBehaviour {
 		exit.enabled = false;
 
 		// Hide pause menu
-		pauseMenu.gameObject.SetActive(false);
+		startMenu();
+
 
 		// Reset Time scale
-		Time.timeScale = 1;
+		Time.timeScale = 0;
 	}
 
 	// Update is called once per frame
@@ -136,6 +137,12 @@ public class GameController : MonoBehaviour {
 	public void winGame(){
 		pauseMenuMessage.text = "You Win";
 		resumeButton.enabled = false;
+		pauseMenu.gameObject.SetActive(true);
+	}
+
+	public void startMenu(){
+		pauseMenuMessage.text = "Stargoose 3D";
+		resumeButton.enabled = true;
 		pauseMenu.gameObject.SetActive(true);
 	}
 }
