@@ -136,7 +136,6 @@ public class StargooseController : MonoBehaviour {
 	private void onPlanetMovement(){
 		float forwardMotion = constantSpeed + (forwardThrust * forwardSpeed);
 		float horizontalMotion = horizontalThrust * horizontalSpeed;
-		print(forwardMotion);
 
 		currentForwardLocation += forwardThrust * forwardSpeed * Time.deltaTime;
 
@@ -306,11 +305,18 @@ if(
 	}
 
 	public void OnTriggerEnter(Collider collider){
+		print(collider.tag);
 		if (collider.gameObject.tag == "Tunnel")
         {
 			EnterTunnel(collider.gameObject.transform);
-        }
+        } else if (collider.gameObject.tag == "Terrain") {
+			die();
+		}
     }
+
+	public void OnColliderEnter(Collision collision){
+		print(collision.gameObject.tag);
+	}
 
 	public void OnTriggerExit(Collider collider){
 		if (collider.gameObject.tag == "Tunnel")
