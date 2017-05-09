@@ -8,7 +8,7 @@ public class GameController : MonoBehaviour {
 	public LevelExit exit = null;
 	private int gemsCollected = 0;
 	static public GameController controller;
-	[SerializeField] private Text ammoText =null, shieldText=null, fuelText=null, rocketsText=null ;
+	[SerializeField] private Text ammoText =null, shieldText=null, fuelText=null, rocketsText=null, gemsText ;
 	private StargooseController stargoose;
 
 	void Start(){
@@ -36,6 +36,7 @@ public class GameController : MonoBehaviour {
 		fuelText.text = "Fuel: " + stargoose.fuel.ToString("###");
 		shieldText.text = "Shield: " + stargoose.shield.ToString();
 		rocketsText.text = "Rockets: " + stargoose.rockets.ToString();
+		gemsText.text = "Gems: " + gemsCollected + " / 6";
 	}
 
 	public void collect (Collectible item){
